@@ -72,94 +72,101 @@ function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCan
       {/* Layer 2: Form */}
       <div className="fixed inset-0 z-[60] flex items-start justify-center pt-8 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-md w-full max-w-2xl max-h-[88vh] overflow-y-auto p-6 ani-scale"
-        style={{ boxShadow: "var(--shadow-xl)", border: "1px solid var(--border)" }}>
-        <h2 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
-          {isEdit ? "تعديل طلب" : "إنشاء طلب جديد"}
-        </h2>
-        <p className="text-[13px] mb-5" style={{ color: "var(--text-muted)" }}>
-          {isEdit ? "تعديل بيانات الطلب الحالي" : "أدخل بيانات الطلب الجديد"}
-        </p>
+        className="pointer-events-auto modal-container max-w-2xl max-h-[88vh] ani-scale">
+        <div className="modal-header">
+          <h2>{isEdit ? "تعديل طلب" : "إنشاء طلب جديد"}</h2>
+          <p>{isEdit ? "تعديل بيانات الطلب الحالي" : "أدخل بيانات الطلب الجديد"}</p>
+        </div>
 
         {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
-        <div className="space-y-5">
-          {/* Client + Site */}
+        {/* Client & Location */}
+        <div className="form-section">
+          <div className="form-section-title">🏢 العميل والموقع</div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>العميل *</label>
+            <div className="form-group">
+              <label className="form-label">العميل *</label>
               <select className="input-field" value={form.client_id} onChange={e => { set("client_id", e.target.value); set("site_id", ""); }} required>
                 <option value="">— اختر العميل —</option>
                 {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>الموقع / المحطة</label>
+            <div className="form-group">
+              <label className="form-label">الموقع / المحطة</label>
               <select className="input-field" value={form.site_id} onChange={e => set("site_id", e.target.value)} disabled={!form.client_id}>
                 <option value="">— اختر الموقع —</option>
                 {sites.map(s => <option key={s.id} value={s.id}>{s.site_name} — {s.city}</option>)}
               </select>
             </div>
           </div>
+        </div>
 
-          {/* Fuel + Quantity */}
+        {/* Fuel & Quantity */}
+        <div className="form-section">
+          <div className="form-section-title">⛽ الوقود والكمية</div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>نوع الوقود</label>
+            <div className="form-group">
+              <label className="form-label">نوع الوقود</label>
               <select className="input-field" value={form.fuel_type_id} onChange={e => set("fuel_type_id", e.target.value)}>
                 <option value="">— اختر —</option>
                 {fuelTypes.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
               </select>
             </div>
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>الكمية (لتر)</label>
+            <div className="form-group">
+              <label className="form-label">الكمية (لتر)</label>
               <input type="number" className="input-field" value={form.quantity_liters} onChange={e => set("quantity_liters", e.target.value)} dir="ltr" placeholder="36000" />
             </div>
           </div>
+        </div>
 
-          {/* Driver + Vehicle */}
+        {/* Driver & Vehicle */}
+        <div className="form-section">
+          <div className="form-section-title">🚛 السائق والصهريج</div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>السائق</label>
+            <div className="form-group">
+              <label className="form-label">السائق</label>
               <select className="input-field" value={form.driver_id} onChange={e => set("driver_id", e.target.value)}>
                 <option value="">— اختر —</option>
                 {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </div>
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>الصهريج</label>
+            <div className="form-group">
+              <label className="form-label">الصهريج</label>
               <select className="input-field" value={form.vehicle_id} onChange={e => set("vehicle_id", e.target.value)}>
                 <option value="">— اختر —</option>
                 {vehicles.map(v => <option key={v.id} value={v.id}>{v.tanker_number} ({(v.tank_capacity_liters / 1000).toFixed(0)}K)</option>)}
               </select>
             </div>
           </div>
+        </div>
 
-          {/* Source + Payment */}
+        {/* Source & Payment */}
+        <div className="form-section">
+          <div className="form-section-title">💳 المصدر والدفع</div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>مصدر الطلب</label>
+            <div className="form-group">
+              <label className="form-label">مصدر الطلب</label>
               <select className="input-field" value={form.source} onChange={e => set("source", e.target.value)}>
                 <option value="manual">يدوي</option><option value="whatsapp">واتساب</option>
                 <option value="phone">هاتف</option><option value="website">موقع</option>
               </select>
             </div>
-            <div>
-              <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>طريقة الدفع</label>
+            <div className="form-group">
+              <label className="form-label">طريقة الدفع</label>
               <select className="input-field" value={form.payment_method} onChange={e => set("payment_method", e.target.value)}>
                 <option value="bank_transfer">تحويل بنكي</option><option value="cash">نقدي</option><option value="credit">آجل</option>
               </select>
             </div>
           </div>
+        </div>
 
-          <div>
-            <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>ملاحظات</label>
-            <textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} />
-          </div>
+        <div className="form-group">
+          <label className="form-label">ملاحظات</label>
+          <textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} />
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(194,198,214,0.15)" }}>
+        <div className="form-footer">
           <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-2.5 rounded-md text-[13px]">إلغاء</button>
           <button type="submit" disabled={saving} className="btn-primary flex-1 py-2.5 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "جاري الحفظ..." : isEdit ? "تحديث الطلب" : "✦ إنشاء الطلب"}

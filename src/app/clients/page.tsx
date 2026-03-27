@@ -45,39 +45,39 @@ function ClientForm({ client, onSave, onCancel }: {
         style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
       <div className="fixed inset-0 z-[60] flex items-start justify-center pt-10 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-md w-full max-w-lg max-h-[85vh] overflow-y-auto p-6 ani-scale"
-        style={{ boxShadow: "var(--shadow-2xl)", border: "1px solid var(--border)" }}>
-        <h2 className="text-lg font-bold mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
-          {isEdit ? "تعديل عميل" : "إضافة عميل جديد"}
-        </h2>
-        <p className="text-[13px] mb-5" style={{ color: "var(--text-muted)" }}>بيانات العميل الأساسية</p>
+        className="pointer-events-auto modal-container max-w-lg max-h-[85vh] ani-scale">
+        <div className="modal-header">
+          <h2>{isEdit ? "تعديل عميل" : "إضافة عميل جديد"}</h2>
+          <p>بيانات العميل الأساسية</p>
+        </div>
         {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
-        <div className="space-y-3">
-          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>اسم العميل *</label><input className="input-field" value={form.name} onChange={e => set("name", e.target.value)} required /></div>
-          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>الاسم التجاري</label><input className="input-field" value={form.commercial_name} onChange={e => set("commercial_name", e.target.value)} /></div>
+        <div className="form-section">
+          <div className="form-section-title">🏢 معلومات العميل</div>
+          <div className="form-group"><label className="form-label">اسم العميل *</label><input className="input-field" value={form.name} onChange={e => set("name", e.target.value)} required /></div>
+          <div className="form-group"><label className="form-label">الاسم التجاري</label><input className="input-field" value={form.commercial_name} onChange={e => set("commercial_name", e.target.value)} /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={labelClass}>النوع</label>
+            <div className="form-group">
+              <label className="form-label">النوع</label>
               <select className="input-field" value={form.operation_type} onChange={e => set("operation_type", e.target.value)}>
                 <option value="transport">نقل</option>
                 <option value="transport_and_sell">نقل وبيع</option>
               </select>
             </div>
-            <div className="flex items-end pb-1"><label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="checkbox" checked={form.is_active} onChange={e => set("is_active", e.target.checked)} className="w-4 h-4 rounded" /> نشط
+            <div className="flex items-end pb-2"><label className="flex items-center gap-2 text-[13px] cursor-pointer font-medium" style={{ color: "var(--text-secondary)" }}>
+              <input type="checkbox" checked={form.is_active} onChange={e => set("is_active", e.target.checked)} className="w-4 h-4 rounded accent-blue-600" /> نشط
             </label></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>رقم السجل التجاري</label><input className="input-field" value={form.cr_number} onChange={e => set("cr_number", e.target.value)} /></div>
-            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>تاريخ انتهاء السجل</label><input type="date" className="input-field" value={form.cr_expiry} onChange={e => set("cr_expiry", e.target.value)} dir="ltr" /></div>
+            <div className="form-group"><label className="form-label">رقم السجل التجاري</label><input className="input-field" value={form.cr_number} onChange={e => set("cr_number", e.target.value)} /></div>
+            <div className="form-group"><label className="form-label">تاريخ انتهاء السجل</label><input type="date" className="input-field" value={form.cr_expiry} onChange={e => set("cr_expiry", e.target.value)} dir="ltr" /></div>
           </div>
-          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>ملاحظات</label><textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} /></div>
+          <div className="form-group"><label className="form-label">ملاحظات</label><textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} /></div>
         </div>
 
-        <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}>
-          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
-          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
+        <div className="form-footer">
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-2.5 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-2.5 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "جاري الحفظ..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>
@@ -128,35 +128,43 @@ function SiteForm({ clientId, site, onSave, onCancel }: {
         style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
       <div className="fixed inset-0 z-[80] flex items-start justify-center pt-10 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-md w-full max-w-lg max-h-[85vh] overflow-y-auto p-6 ani-scale"
-        style={{ boxShadow: "var(--shadow-2xl)", border: "1px solid var(--border)" }}>
-        <h2 className="text-lg font-bold mb-4" style={{ fontFamily: "var(--font-display)" }}>
-          {isEdit ? "تعديل موقع" : "إضافة موقع/محطة"}
-        </h2>
-        <div className="space-y-3">
-          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>اسم الموقع *</label><input className="input-field" value={form.site_name} onChange={e => set("site_name", e.target.value)} required /></div>
+        className="pointer-events-auto modal-container max-w-lg max-h-[85vh] ani-scale">
+        <div className="modal-header">
+          <h2>{isEdit ? "تعديل موقع" : "إضافة موقع/محطة"}</h2>
+          <p>بيانات الموقع والعنوان</p>
+        </div>
+
+        <div className="form-section">
+          <div className="form-section-title">📍 معلومات الموقع</div>
+          <div className="form-group"><label className="form-label">اسم الموقع *</label><input className="input-field" value={form.site_name} onChange={e => set("site_name", e.target.value)} required /></div>
           <div className="grid grid-cols-3 gap-3">
-            <div><label className={labelClass}>النوع</label>
+            <div className="form-group">
+              <label className="form-label">النوع</label>
               <select className="input-field" value={form.site_type} onChange={e => set("site_type", e.target.value)}>
                 <option value="branch">فرع/محطة</option><option value="admin">إدارة</option>
               </select>
             </div>
-            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>الفئة</label><input className="input-field" value={form.category} onChange={e => set("category", e.target.value)} placeholder="أ, ب, ج" /></div>
-            <div className="flex items-end pb-1"><label className="flex items-center gap-2 text-xs cursor-pointer">
-              <input type="checkbox" checked={form.is_classified} onChange={e => set("is_classified", e.target.checked)} className="w-4 h-4 rounded" /> مصنّف
+            <div className="form-group"><label className="form-label">الفئة</label><input className="input-field" value={form.category} onChange={e => set("category", e.target.value)} placeholder="أ, ب, ج" /></div>
+            <div className="flex items-end pb-2"><label className="flex items-center gap-2 text-[13px] cursor-pointer font-medium" style={{ color: "var(--text-secondary)" }}>
+              <input type="checkbox" checked={form.is_classified} onChange={e => set("is_classified", e.target.checked)} className="w-4 h-4 rounded accent-blue-600" /> مصنّف
             </label></div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>المنطقة</label><input className="input-field" value={form.region} onChange={e => set("region", e.target.value)} /></div>
-            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>المدينة</label><input className="input-field" value={form.city} onChange={e => set("city", e.target.value)} /></div>
-          </div>
-          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>العنوان التفصيلي</label><input className="input-field" value={form.detailed_address} onChange={e => set("detailed_address", e.target.value)} /></div>
-          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>إحداثيات / رابط جوجل</label><input className="input-field" value={form.coordinates_url} onChange={e => set("coordinates_url", e.target.value)} dir="ltr" /></div>
-          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>قيمة النقل الأساسية (ر.س)</label><input type="number" className="input-field" value={form.base_transport_value} onChange={e => set("base_transport_value", e.target.value)} dir="ltr" /></div>
         </div>
-        <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}>
-          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
-          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
+
+        <div className="form-section">
+          <div className="form-section-title">🗺️ الموقع الجغرافي</div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="form-group"><label className="form-label">المنطقة</label><input className="input-field" value={form.region} onChange={e => set("region", e.target.value)} /></div>
+            <div className="form-group"><label className="form-label">المدينة</label><input className="input-field" value={form.city} onChange={e => set("city", e.target.value)} /></div>
+          </div>
+          <div className="form-group"><label className="form-label">العنوان التفصيلي</label><input className="input-field" value={form.detailed_address} onChange={e => set("detailed_address", e.target.value)} /></div>
+          <div className="form-group"><label className="form-label">إحداثيات / رابط جوجل</label><input className="input-field" value={form.coordinates_url} onChange={e => set("coordinates_url", e.target.value)} dir="ltr" /></div>
+          <div className="form-group"><label className="form-label">قيمة النقل الأساسية (ر.س)</label><input type="number" className="input-field" value={form.base_transport_value} onChange={e => set("base_transport_value", e.target.value)} dir="ltr" /></div>
+        </div>
+
+        <div className="form-footer">
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-2.5 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-2.5 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>

@@ -74,47 +74,72 @@ function DriverForm({ driver, onSave, onCancel }: { driver: Partial<Driver> | nu
         style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
       <div className="fixed inset-0 z-[60] flex items-start justify-center pt-8 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-md w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6 ani-scale"
-        style={{ boxShadow: "var(--shadow-xl)", border: "1px solid var(--border)" }}>
-        <h2 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)" }}>
-          {isEdit ? "تعديل سائق" : "إضافة سائق جديد"}
-        </h2>
-        <p className="text-[13px] mb-5" style={{ color: "var(--text-muted)" }}>بيانات السائق والوثائق</p>
+        className="pointer-events-auto modal-container max-w-2xl max-h-[85vh] ani-scale">
+        <div className="modal-header">
+          <h2>{isEdit ? "تعديل سائق" : "إضافة سائق جديد"}</h2>
+          <p>بيانات السائق والوثائق</p>
+        </div>
         {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
-        <div className="grid grid-cols-2 gap-4 mb-5">
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>الرقم الوظيفي *</label><input className="input-field" value={form.employee_number} onChange={e => set("employee_number", e.target.value)} required /></div>
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>اسم السائق *</label><input className="input-field" value={form.name} onChange={e => set("name", e.target.value)} required /></div>
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>رقم الجوال</label><input className="input-field" value={form.phone} onChange={e => set("phone", e.target.value)} dir="ltr" /></div>
-          <div className="flex items-end pb-2">
-            <label className="flex items-center gap-2.5 text-[13px] cursor-pointer font-medium" style={{ color: "var(--text-secondary)" }}>
-              <input type="checkbox" checked={form.is_active} onChange={e => set("is_active", e.target.checked)} className="w-4 h-4 rounded accent-blue-600" /> نشط
-            </label>
+        {/* Basic Info Section */}
+        <div className="form-section">
+          <div className="form-section-title">👤 البيانات الأساسية</div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="form-group">
+              <label className="form-label">الرقم الوظيفي *</label>
+              <input className="input-field" value={form.employee_number} onChange={e => set("employee_number", e.target.value)} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">اسم السائق *</label>
+              <input className="input-field" value={form.name} onChange={e => set("name", e.target.value)} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">رقم الجوال</label>
+              <input className="input-field" value={form.phone} onChange={e => set("phone", e.target.value)} dir="ltr" />
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2.5 text-[13px] cursor-pointer font-medium" style={{ color: "var(--text-secondary)" }}>
+                <input type="checkbox" checked={form.is_active} onChange={e => set("is_active", e.target.checked)} className="w-4 h-4 rounded accent-blue-600" /> نشط
+              </label>
+            </div>
           </div>
         </div>
 
-        <h3 className="text-[13px] font-bold mb-4 pt-4 flex items-center gap-2" style={{ borderTop: "1px solid rgba(194,198,214,0.15)", color: "var(--text-primary)" }}>📄 الوثائق والمستندات</h3>
-        <div className="space-y-3">
-          {[
-            { label: "الهوية / الإقامة", numKey: "national_id", dateKey: "national_id_expiry" },
-            { label: "الجواز", numKey: "passport_number", dateKey: "passport_expiry" },
-            { label: "رخصة القيادة", numKey: "license_number", dateKey: "license_expiry" },
-            { label: "كرت أرامكو", numKey: "aramco_card", dateKey: "aramco_card_expiry" },
-            { label: "كرت وزارة النقل", numKey: "transport_card", dateKey: "transport_card_expiry" },
-          ].map(doc => (
-            <div key={doc.numKey} className="grid grid-cols-3 gap-3 items-end">
-              <div><label className="text-[11px] font-bold mb-1.5 block" style={{ color: "var(--text-muted)" }}>رقم {doc.label}</label><input className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.numKey]} onChange={e => set(doc.numKey, e.target.value)} /></div>
-              <div><label className="text-[11px] font-bold mb-1.5 block" style={{ color: "var(--text-muted)" }}>تاريخ الانتهاء</label><input type="date" className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.dateKey]} onChange={e => set(doc.dateKey, e.target.value)} dir="ltr" /></div>
-              <div className="pb-2"><ExpiryBadge date={(form as unknown as Record<string, string>)[doc.dateKey]} label={doc.label} /></div>
-            </div>
-          ))}
+        {/* Documents Section */}
+        <div className="form-section">
+          <div className="form-section-title">📄 الوثائق والمستندات</div>
+          <div className="space-y-4">
+            {[
+              { label: "الهوية / الإقامة", numKey: "national_id", dateKey: "national_id_expiry" },
+              { label: "الجواز", numKey: "passport_number", dateKey: "passport_expiry" },
+              { label: "رخصة القيادة", numKey: "license_number", dateKey: "license_expiry" },
+              { label: "كرت أرامكو", numKey: "aramco_card", dateKey: "aramco_card_expiry" },
+              { label: "كرت وزارة النقل", numKey: "transport_card", dateKey: "transport_card_expiry" },
+            ].map(doc => (
+              <div key={doc.numKey} className="grid grid-cols-3 gap-3 items-end">
+                <div className="form-group">
+                  <label className="form-label">رقم {doc.label}</label>
+                  <input className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.numKey]} onChange={e => set(doc.numKey, e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">تاريخ الانتهاء</label>
+                  <input type="date" className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.dateKey]} onChange={e => set(doc.dateKey, e.target.value)} dir="ltr" />
+                </div>
+                <div className="pb-2"><ExpiryBadge date={(form as unknown as Record<string, string>)[doc.dateKey]} label={doc.label} /></div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-4"><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>ملاحظات</label><textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} /></div>
+        {/* Notes */}
+        <div className="form-group">
+          <label className="form-label">ملاحظات</label>
+          <textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} />
+        </div>
 
-        <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(194,198,214,0.15)" }}>
-          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
-          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
+        <div className="form-footer">
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-2.5 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-2.5 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "جاري الحفظ..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>

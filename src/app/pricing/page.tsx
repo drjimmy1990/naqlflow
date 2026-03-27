@@ -119,32 +119,42 @@ export default function PricingPage() {
 
         {/* Add/Edit Form (inline) */}
         {showForm && (
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-5 mb-4 ani-scale">
-            <h3 className="text-sm font-bold mb-3">{editId ? "تعديل سعر" : "إضافة سعر جديد"}</h3>
-            {error && <div className="bg-red-50 text-red-700 text-xs p-2 rounded-lg mb-3">{error}</div>}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              <div><label className={labelClass}>العميل *</label>
-                <select className={inputClass} value={form.client_id} onChange={e => set("client_id", e.target.value)} required>
-                  <option value="">اختر</option>{clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select></div>
-              <div><label className={labelClass}>نوع الوقود *</label>
-                <select className={inputClass} value={form.fuel_type_id} onChange={e => set("fuel_type_id", e.target.value)} required>
-                  <option value="">اختر</option>{fuelTypes.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
-                </select></div>
-              <div><label className={labelClass}>حجم الصهريج (لتر) *</label>
-                <select className={inputClass} value={form.capacity_liters} onChange={e => set("capacity_liters", e.target.value)} required>
-                  <option value="">اختر</option>
+          <form onSubmit={handleSubmit} className="form-section mb-4 ani-scale" style={{ background: "#fff", border: "1px solid var(--border)" }}>
+            <div className="form-section-title" style={{ marginBottom: "16px" }}>💰 {editId ? "تعديل سعر" : "إضافة سعر جديد"}</div>
+            {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="form-group">
+                <label className="form-label">العميل *</label>
+                <select className="input-field" value={form.client_id} onChange={e => set("client_id", e.target.value)} required>
+                  <option value="">— اختر —</option>{clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">نوع الوقود *</label>
+                <select className="input-field" value={form.fuel_type_id} onChange={e => set("fuel_type_id", e.target.value)} required>
+                  <option value="">— اختر —</option>{fuelTypes.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">حجم الصهريج (لتر) *</label>
+                <select className="input-field" value={form.capacity_liters} onChange={e => set("capacity_liters", e.target.value)} required>
+                  <option value="">— اختر —</option>
                   {[20000, 22000, 32000, 36000].map(c => <option key={c} value={c}>{(c/1000)}K — {c.toLocaleString()} لتر</option>)}
-                </select></div>
-              <div><label className={labelClass}>زيادة اللتر</label>
-                <input type="number" step="0.001" className={inputClass} value={form.liter_increase} onChange={e => set("liter_increase", e.target.value)} dir="ltr" /></div>
-              <div><label className={labelClass}>السعر الإجمالي (ر.س) *</label>
-                <input type="number" step="0.01" className={inputClass} value={form.total_price} onChange={e => set("total_price", e.target.value)} required dir="ltr" /></div>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">زيادة اللتر</label>
+                <input type="number" step="0.001" className="input-field" value={form.liter_increase} onChange={e => set("liter_increase", e.target.value)} dir="ltr" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">السعر الإجمالي (ر.س) *</label>
+                <input type="number" step="0.01" className="input-field" value={form.total_price} onChange={e => set("total_price", e.target.value)} required dir="ltr" />
+              </div>
             </div>
-            <div className="flex gap-2 mt-3">
-              <button type="submit" disabled={saving} className="px-4 py-2 rounded-md text-xs font-semibold bg-blue-600 text-white disabled:opacity-50">
-                {saving ? "..." : editId ? "تحديث" : "إضافة"}</button>
-              <button type="button" onClick={resetForm} className="px-4 py-2 rounded-md text-xs font-semibold border border-slate-200">إلغاء</button>
+            <div className="flex gap-3 mt-4 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
+              <button type="submit" disabled={saving} className="btn-primary px-5 py-2.5 rounded-md text-[13px] disabled:opacity-50">
+                {saving ? "..." : editId ? "✦ تحديث" : "✦ إضافة"}</button>
+              <button type="button" onClick={resetForm} className="btn-ghost px-5 py-2.5 rounded-md text-[13px]">إلغاء</button>
             </div>
           </form>
         )}

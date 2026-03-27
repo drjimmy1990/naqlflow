@@ -72,60 +72,83 @@ function VehicleForm({ vehicle, drivers, onSave, onCancel }: { vehicle: Partial<
   return (
     <>
       <div className="fixed inset-0 z-50 ani-fade" onClick={onCancel}
-        style={{ background: "rgba(15, 23, 42, 0.45)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />
+        style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
       <div className="fixed inset-0 z-[60] flex items-start justify-center pt-8 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-lg w-full max-w-2xl max-h-[88vh] overflow-y-auto p-7 ani-scale"
-        style={{ boxShadow: "var(--shadow-xl)" }}>
-        <h2 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)" }}>{isEdit ? "تعديل صهريج" : "إضافة صهريج جديد"}</h2>
-        <p className="text-[13px] mb-5" style={{ color: "var(--text-muted)" }}>بيانات الصهريج والوثائق</p>
+        className="pointer-events-auto modal-container max-w-2xl max-h-[88vh] ani-scale">
+        <div className="modal-header">
+          <h2>{isEdit ? "تعديل صهريج" : "إضافة صهريج جديد"}</h2>
+          <p>بيانات الصهريج والوثائق</p>
+        </div>
         {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
-        <div className="grid grid-cols-2 gap-4 mb-5">
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>رقم الصهريج *</label><input className="input-field" value={form.tanker_number} onChange={e => set("tanker_number", e.target.value)} required /></div>
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>رقم اللوحة</label><input className="input-field" value={form.plate_number} onChange={e => set("plate_number", e.target.value)} /></div>
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>الماركة</label><input className="input-field" value={form.brand} onChange={e => set("brand", e.target.value)} /></div>
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>الموديل</label><input className="input-field" value={form.model} onChange={e => set("model", e.target.value)} /></div>
-          <div>
-            <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>نوع الوقود</label>
-            <select className="input-field" value={form.fuel_type_carried} onChange={e => set("fuel_type_carried", e.target.value)}>
-              <option value="">— اختر —</option>
-              {Object.entries(FUEL_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
-          </div>
-          <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>سعة الخزان (لتر) *</label><input type="number" className="input-field" value={form.tank_capacity_liters} onChange={e => set("tank_capacity_liters", e.target.value)} required dir="ltr" /></div>
-          <div>
-            <label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>السائق المعيّن</label>
-            <select className="input-field" value={form.driver_id} onChange={e => set("driver_id", e.target.value)}>
-              <option value="">— بدون سائق —</option>
-              {drivers.map(d => <option key={d.id} value={d.id}>{d.name} ({d.employee_number})</option>)}
-            </select>
-          </div>
-          <div className="flex items-end pb-2">
-            <label className="flex items-center gap-2.5 text-[13px] cursor-pointer font-medium" style={{ color: "var(--text-secondary)" }}>
-              <input type="checkbox" checked={form.is_active} onChange={e => set("is_active", e.target.checked)} className="w-4 h-4 rounded accent-blue-600" /> نشط
-            </label>
-          </div>
-        </div>
-
-        <h3 className="text-[13px] font-bold mb-4 pt-4 flex items-center gap-2" style={{ borderTop: "1px solid rgba(194,198,214,0.15)", color: "var(--text-primary)" }}>📄 الوثائق</h3>
-        <div className="space-y-3">
-          {[
-            { label: "الاستمارة", numKey: "registration_number", dateKey: "registration_expiry" },
-            { label: "الفحص الدوري", numKey: null, dateKey: "inspection_expiry" },
-            { label: "كرت التشغيل", numKey: "operating_card_number", dateKey: "operating_card_expiry" },
-          ].map(doc => (
-            <div key={doc.dateKey} className="grid grid-cols-3 gap-3 items-end">
-              {doc.numKey ? <div><label className="text-[11px] font-bold mb-1.5 block" style={{ color: "var(--text-muted)" }}>رقم {doc.label}</label><input className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.numKey]} onChange={e => set(doc.numKey!, e.target.value)} /></div> : <div />}
-              <div><label className="text-[11px] font-bold mb-1.5 block" style={{ color: "var(--text-muted)" }}>تاريخ انتهاء {doc.label}</label><input type="date" className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.dateKey]} onChange={e => set(doc.dateKey, e.target.value)} dir="ltr" /></div>
-              <div className="pb-2"><ExpiryBadge date={(form as unknown as Record<string, string>)[doc.dateKey]} label={doc.label} /></div>
+        {/* Vehicle Info */}
+        <div className="form-section">
+          <div className="form-section-title">🚛 بيانات الصهريج</div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="form-group">
+              <label className="form-label">رقم الصهريج *</label>
+              <input className="input-field" value={form.tanker_number} onChange={e => set("tanker_number", e.target.value)} required />
             </div>
-          ))}
+            <div className="form-group">
+              <label className="form-label">رقم اللوحة</label>
+              <input className="input-field" value={form.plate_number} onChange={e => set("plate_number", e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">الماركة</label>
+              <input className="input-field" value={form.brand} onChange={e => set("brand", e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">الموديل</label>
+              <input className="input-field" value={form.model} onChange={e => set("model", e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">نوع الوقود</label>
+              <select className="input-field" value={form.fuel_type_carried} onChange={e => set("fuel_type_carried", e.target.value)}>
+                <option value="">— اختر —</option>
+                {Object.entries(FUEL_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">سعة الخزان (لتر) *</label>
+              <input type="number" className="input-field" value={form.tank_capacity_liters} onChange={e => set("tank_capacity_liters", e.target.value)} required dir="ltr" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">السائق المعيّن</label>
+              <select className="input-field" value={form.driver_id} onChange={e => set("driver_id", e.target.value)}>
+                <option value="">— بدون سائق —</option>
+                {drivers.map(d => <option key={d.id} value={d.id}>{d.name} ({d.employee_number})</option>)}
+              </select>
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2.5 text-[13px] cursor-pointer font-medium" style={{ color: "var(--text-secondary)" }}>
+                <input type="checkbox" checked={form.is_active} onChange={e => set("is_active", e.target.checked)} className="w-4 h-4 rounded accent-blue-600" /> نشط
+              </label>
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(194,198,214,0.15)" }}>
-          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
-          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
+        {/* Documents */}
+        <div className="form-section">
+          <div className="form-section-title">📄 الوثائق</div>
+          <div className="space-y-4">
+            {[
+              { label: "الاستمارة", numKey: "registration_number", dateKey: "registration_expiry" },
+              { label: "الفحص الدوري", numKey: null, dateKey: "inspection_expiry" },
+              { label: "كرت التشغيل", numKey: "operating_card_number", dateKey: "operating_card_expiry" },
+            ].map(doc => (
+              <div key={doc.dateKey} className="grid grid-cols-3 gap-3 items-end">
+                {doc.numKey ? <div className="form-group"><label className="form-label">رقم {doc.label}</label><input className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.numKey]} onChange={e => set(doc.numKey!, e.target.value)} /></div> : <div />}
+                <div className="form-group"><label className="form-label">تاريخ انتهاء {doc.label}</label><input type="date" className="input-field text-[13px]" value={(form as unknown as Record<string, string>)[doc.dateKey]} onChange={e => set(doc.dateKey, e.target.value)} dir="ltr" /></div>
+                <div className="pb-2"><ExpiryBadge date={(form as unknown as Record<string, string>)[doc.dateKey]} label={doc.label} /></div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="form-footer">
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-2.5 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-2.5 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>
