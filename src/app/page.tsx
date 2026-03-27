@@ -1,65 +1,102 @@
-import Image from "next/image";
+import PageHeader from "@/components/PageHeader";
 
-export default function Home() {
+// KPI Card Component
+function KPICard({ label, value, icon, accent }: { label: string; value: string | number; icon: string; accent: string }) {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="hov-lift bg-white rounded-2xl px-5 py-[18px] flex-1 min-w-[165px] shadow-sm flex items-center gap-3.5"
+      style={{ borderRight: `4px solid ${accent}` }}>
+      <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl"
+        style={{ background: accent + "0F" }}>
+        {icon}
+      </div>
+      <div>
+        <div className="text-[26px] font-bold tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+          {value}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="text-xs text-slate-500 mt-0.5">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <div className="ani-page">
+      <PageHeader title="لوحة التحكم" subtitle="نظرة عامة على عمليات اليوم" />
+
+      <div className="p-6">
+        {/* KPIs */}
+        <div className="stg flex gap-3 flex-wrap mb-5">
+          <KPICard label="طلبات اليوم" value="0" icon="📋" accent="#2563EB" />
+          <KPICard label="طلبات نشطة" value="0" icon="🚚" accent="#16A34A" />
+          <KPICard label="مراجعة مالية" value="0" icon="⏳" accent="#F59E0B" />
+          <KPICard label="سائقين نشطين" value="0" icon="👤" accent="#7C3AED" />
         </div>
-      </main>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
+          {/* Orders Table placeholder */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm ani-up">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-[14.5px] font-bold m-0">آخر الطلبات</h3>
+              <a href="/orders"
+                className="text-blue-600 text-xs font-semibold bg-white px-3 py-1.5 rounded-lg border-[1.5px] border-blue-600 no-underline hover:bg-blue-50 transition-colors">
+                عرض الكل
+              </a>
+            </div>
+            <div className="text-center py-12 text-slate-400">
+              <div className="text-4xl mb-3">📋</div>
+              <p className="text-sm">لا توجد طلبات بعد</p>
+              <p className="text-xs mt-1 text-slate-300">
+                قم بإنشاء مشروع Supabase وربطه لبدء استقبال الطلبات
+              </p>
+            </div>
+          </div>
+
+          {/* Right Panel */}
+          <div className="flex flex-col gap-3.5">
+            {/* Map placeholder */}
+            <div className="ani-left rounded-2xl p-6 text-white text-center shadow-sm"
+              style={{ background: "linear-gradient(150deg, #0F172A 0%, #1E293B 100%)" }}>
+              <div className="text-3xl mb-2 ani-pop">🗺️</div>
+              <div className="font-semibold text-sm" style={{ fontFamily: "var(--font-display)" }}>
+                خريطة المركبات
+              </div>
+              <div className="text-[10.5px] text-[#4B5A77] mt-1">Google Maps API</div>
+              <div className="flex gap-1.5 justify-center mt-3">
+                {["المدينة", "حائل", "القصيم"].map(c => (
+                  <span key={c} className="px-2.5 py-1 rounded-md text-[9.5px]"
+                    style={{ background: "rgba(96,165,250,0.1)", color: "#60A5FA" }}>{c}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Setup Guide */}
+            <div className="ani-left bg-white rounded-2xl p-5 shadow-sm">
+              <h3 className="text-sm font-bold mb-3 flex items-center gap-1.5">
+                🚀 خطوات الإعداد
+              </h3>
+              <div className="space-y-2">
+                {[
+                  { step: "1", text: "أنشئ مشروع Supabase جديد", done: false },
+                  { step: "2", text: "انسخ URL و Anon Key إلى .env.local", done: false },
+                  { step: "3", text: "نفّذ schema.sql في SQL Editor", done: false },
+                  { step: "4", text: "أضف أول عميل وسائق", done: false },
+                ].map((s) => (
+                  <div key={s.step}
+                    className="flex items-center gap-2.5 p-2.5 rounded-lg text-xs"
+                    style={{ background: s.done ? "#DCFCE7" : "#F1F5F9" }}>
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
+                      style={{ background: s.done ? "#16A34A" : "#94A3B8" }}>
+                      {s.done ? "✓" : s.step}
+                    </span>
+                    {s.text}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
