@@ -25,8 +25,7 @@ function ClientForm({ client, onSave, onCancel }: {
   const [error, setError] = useState("");
 
   const set = (k: string, v: string | boolean) => setForm(p => ({ ...p, [k]: v }));
-  const inputClass = "w-full px-3 py-2 rounded-lg border border-slate-200 text-sm";
-  const labelClass = "text-xs font-semibold text-slate-600 mb-1 block";
+  const labelClass = "text-[12px] font-bold mb-1.5 block";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,22 +40,26 @@ function ClientForm({ client, onSave, onCancel }: {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 ani-fade" onClick={onCancel}>
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
-      <form onSubmit={handleSubmit} onClick={e => e.stopPropagation()}
-        className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto p-6 ani-scale">
-        <h2 className="text-lg font-bold mb-4" style={{ fontFamily: "var(--font-display)" }}>
+    <>
+      <div className="fixed inset-0 z-50 ani-fade" onClick={onCancel}
+        style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
+      <div className="fixed inset-0 z-[60] flex items-start justify-center pt-10 pointer-events-none">
+      <form onSubmit={handleSubmit}
+        className="pointer-events-auto bg-white rounded-md w-full max-w-lg max-h-[85vh] overflow-y-auto p-6 ani-scale"
+        style={{ boxShadow: "var(--shadow-2xl)", border: "1px solid var(--border)" }}>
+        <h2 className="text-lg font-bold mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
           {isEdit ? "تعديل عميل" : "إضافة عميل جديد"}
         </h2>
-        {error && <div className="bg-red-50 text-red-700 text-xs p-3 rounded-lg mb-3 font-semibold">{error}</div>}
+        <p className="text-[13px] mb-5" style={{ color: "var(--text-muted)" }}>بيانات العميل الأساسية</p>
+        {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
         <div className="space-y-3">
-          <div><label className={labelClass}>اسم العميل *</label><input className={inputClass} value={form.name} onChange={e => set("name", e.target.value)} required /></div>
-          <div><label className={labelClass}>الاسم التجاري</label><input className={inputClass} value={form.commercial_name} onChange={e => set("commercial_name", e.target.value)} /></div>
+          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>اسم العميل *</label><input className="input-field" value={form.name} onChange={e => set("name", e.target.value)} required /></div>
+          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>الاسم التجاري</label><input className="input-field" value={form.commercial_name} onChange={e => set("commercial_name", e.target.value)} /></div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelClass}>النوع</label>
-              <select className={inputClass} value={form.operation_type} onChange={e => set("operation_type", e.target.value)}>
+              <select className="input-field" value={form.operation_type} onChange={e => set("operation_type", e.target.value)}>
                 <option value="transport">نقل</option>
                 <option value="transport_and_sell">نقل وبيع</option>
               </select>
@@ -66,20 +69,21 @@ function ClientForm({ client, onSave, onCancel }: {
             </label></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className={labelClass}>رقم السجل التجاري</label><input className={inputClass} value={form.cr_number} onChange={e => set("cr_number", e.target.value)} /></div>
-            <div><label className={labelClass}>تاريخ انتهاء السجل</label><input type="date" className={inputClass} value={form.cr_expiry} onChange={e => set("cr_expiry", e.target.value)} dir="ltr" /></div>
+            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>رقم السجل التجاري</label><input className="input-field" value={form.cr_number} onChange={e => set("cr_number", e.target.value)} /></div>
+            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>تاريخ انتهاء السجل</label><input type="date" className="input-field" value={form.cr_expiry} onChange={e => set("cr_expiry", e.target.value)} dir="ltr" /></div>
           </div>
-          <div><label className={labelClass}>ملاحظات</label><textarea className={inputClass} rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} /></div>
+          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>ملاحظات</label><textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} /></div>
         </div>
 
-        <div className="flex gap-3 mt-5 pt-4 border-t">
-          <button type="button" onClick={onCancel} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">إلغاء</button>
-          <button type="submit" disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50">
-            {saving ? "جاري الحفظ..." : isEdit ? "تحديث" : "إضافة"}
+        <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}>
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
+            {saving ? "جاري الحفظ..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>
       </form>
-    </div>
+      </div>
+    </>
   );
 }
 
@@ -105,8 +109,7 @@ function SiteForm({ clientId, site, onSave, onCancel }: {
   });
   const [saving, setSaving] = useState(false);
   const set = (k: string, v: string | boolean) => setForm(p => ({ ...p, [k]: v }));
-  const inputClass = "w-full px-3 py-2 rounded-lg border border-slate-200 text-sm";
-  const labelClass = "text-xs font-semibold text-slate-600 mb-1 block";
+  const labelClass = "text-[12px] font-bold mb-1.5 block";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,42 +123,46 @@ function SiteForm({ clientId, site, onSave, onCancel }: {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 ani-fade" onClick={onCancel}>
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
-      <form onSubmit={handleSubmit} onClick={e => e.stopPropagation()}
-        className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto p-6 ani-scale">
+    <>
+      <div className="fixed inset-0 z-[70] ani-fade" onClick={onCancel}
+        style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
+      <div className="fixed inset-0 z-[80] flex items-start justify-center pt-10 pointer-events-none">
+      <form onSubmit={handleSubmit}
+        className="pointer-events-auto bg-white rounded-md w-full max-w-lg max-h-[85vh] overflow-y-auto p-6 ani-scale"
+        style={{ boxShadow: "var(--shadow-2xl)", border: "1px solid var(--border)" }}>
         <h2 className="text-lg font-bold mb-4" style={{ fontFamily: "var(--font-display)" }}>
           {isEdit ? "تعديل موقع" : "إضافة موقع/محطة"}
         </h2>
         <div className="space-y-3">
-          <div><label className={labelClass}>اسم الموقع *</label><input className={inputClass} value={form.site_name} onChange={e => set("site_name", e.target.value)} required /></div>
+          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>اسم الموقع *</label><input className="input-field" value={form.site_name} onChange={e => set("site_name", e.target.value)} required /></div>
           <div className="grid grid-cols-3 gap-3">
             <div><label className={labelClass}>النوع</label>
-              <select className={inputClass} value={form.site_type} onChange={e => set("site_type", e.target.value)}>
+              <select className="input-field" value={form.site_type} onChange={e => set("site_type", e.target.value)}>
                 <option value="branch">فرع/محطة</option><option value="admin">إدارة</option>
               </select>
             </div>
-            <div><label className={labelClass}>الفئة</label><input className={inputClass} value={form.category} onChange={e => set("category", e.target.value)} placeholder="أ, ب, ج" /></div>
+            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>الفئة</label><input className="input-field" value={form.category} onChange={e => set("category", e.target.value)} placeholder="أ, ب, ج" /></div>
             <div className="flex items-end pb-1"><label className="flex items-center gap-2 text-xs cursor-pointer">
               <input type="checkbox" checked={form.is_classified} onChange={e => set("is_classified", e.target.checked)} className="w-4 h-4 rounded" /> مصنّف
             </label></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className={labelClass}>المنطقة</label><input className={inputClass} value={form.region} onChange={e => set("region", e.target.value)} /></div>
-            <div><label className={labelClass}>المدينة</label><input className={inputClass} value={form.city} onChange={e => set("city", e.target.value)} /></div>
+            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>المنطقة</label><input className="input-field" value={form.region} onChange={e => set("region", e.target.value)} /></div>
+            <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>المدينة</label><input className="input-field" value={form.city} onChange={e => set("city", e.target.value)} /></div>
           </div>
-          <div><label className={labelClass}>العنوان التفصيلي</label><input className={inputClass} value={form.detailed_address} onChange={e => set("detailed_address", e.target.value)} /></div>
-          <div><label className={labelClass}>إحداثيات / رابط جوجل</label><input className={inputClass} value={form.coordinates_url} onChange={e => set("coordinates_url", e.target.value)} dir="ltr" /></div>
-          <div><label className={labelClass}>قيمة النقل الأساسية (ر.س)</label><input type="number" className={inputClass} value={form.base_transport_value} onChange={e => set("base_transport_value", e.target.value)} dir="ltr" /></div>
+          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>العنوان التفصيلي</label><input className="input-field" value={form.detailed_address} onChange={e => set("detailed_address", e.target.value)} /></div>
+          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>إحداثيات / رابط جوجل</label><input className="input-field" value={form.coordinates_url} onChange={e => set("coordinates_url", e.target.value)} dir="ltr" /></div>
+          <div><label className={labelClass} style={{ color: "var(--text-secondary)" }}>قيمة النقل الأساسية (ر.س)</label><input type="number" className="input-field" value={form.base_transport_value} onChange={e => set("base_transport_value", e.target.value)} dir="ltr" /></div>
         </div>
-        <div className="flex gap-3 mt-5 pt-4 border-t">
-          <button type="button" onClick={onCancel} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-200">إلغاء</button>
-          <button type="submit" disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 text-white disabled:opacity-50">
-            {saving ? "..." : isEdit ? "تحديث" : "إضافة"}
+        <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}>
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
+            {saving ? "..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>
       </form>
-    </div>
+      </div>
+    </>
   );
 }
 
@@ -191,7 +198,7 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
     <div className="fixed inset-0 z-40 flex items-start justify-center pt-6 ani-fade" onClick={onClose}>
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
       <div onClick={e => e.stopPropagation()}
-        className="relative bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[88vh] overflow-y-auto p-6 ani-scale">
+        className="relative bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[88vh] overflow-y-auto p-6 ani-scale">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h2 className="text-lg font-bold" style={{ fontFamily: "var(--font-display)" }}>🏢 {client.name}</h2>
@@ -215,7 +222,7 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
               {sites.map(s => {
                 const siteContacts = contacts.filter(c => c.site_id === s.id);
                 return (
-                  <div key={s.id} className="border border-slate-100 rounded-xl p-3 hover:border-slate-200 transition-colors">
+                  <div key={s.id} className="border border-slate-100 rounded-md p-3 hover:border-slate-200 transition-colors">
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="font-semibold text-sm flex items-center gap-2">
@@ -308,53 +315,73 @@ export default function ClientsPage() {
     <div className="ani-page">
       <PageHeader title="إدارة العملاء" subtitle={`${clients.length} عميل`}
         action={<button onClick={() => { setEditClient(null); setShowForm(true); }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-blue-700">+ إضافة عميل</button>} />
+          className="btn-primary text-[12px]">+ إضافة عميل</button>} />
 
-      <div className="p-6">
+      <div className="page-content">
         {loading ? (
-          <div className="text-center py-20 text-slate-400"><div className="text-3xl mb-2 animate-pulse">⏳</div>جاري التحميل...</div>
+          <div className="empty-state animate-pulse">
+            <div className="text-3xl mb-2">⏳</div>
+            <p className="text-[13px] font-medium" style={{ color: "var(--text-faint)" }}>جاري التحميل...</p>
+          </div>
         ) : clients.length === 0 ? (
-          <div className="text-center py-16 text-slate-400 bg-white rounded-2xl shadow-sm">
+          <div className="empty-state">
             <div className="text-5xl mb-3">🏢</div>
-            <p className="text-sm font-medium">لا يوجد عملاء</p>
+            <p className="text-[14px] font-semibold" style={{ color: "var(--text-secondary)" }}>لا يوجد عملاء</p>
+            <p className="text-[12px] mt-1" style={{ color: "var(--text-faint)" }}>أضف أول عميل للبدء</p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden ani-up">
-            <table className="w-full border-collapse">
+          <div className="card overflow-hidden ani-up">
+            <table className="table-premium">
               <thead>
                 <tr>
-                  {["العميل", "الاسم التجاري", "النوع", "السجل", "المواقع", "الحالة", "إجراء"].map(h => (
-                    <th key={h} className="p-3 text-right border-b-2 border-slate-100 text-slate-400 text-[10.5px] font-bold">{h}</th>
-                  ))}
+                  <th>العميل</th>
+                  <th>الاسم التجاري</th>
+                  <th>النوع</th>
+                  <th>السجل</th>
+                  <th>المواقع</th>
+                  <th>الحالة</th>
+                  <th>إجراء</th>
                 </tr>
               </thead>
               <tbody className="stg">
                 {clients.map(c => (
-                  <tr key={c.id} className="hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => setDetailClient(c)}>
-                    <td className="p-3 border-b border-slate-100 font-semibold text-sm">{c.name}</td>
-                    <td className="p-3 border-b border-slate-100 text-xs text-slate-500">{c.commercial_name || "—"}</td>
-                    <td className="p-3 border-b border-slate-100">
-                      <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{
-                        background: c.operation_type === "transport" ? "#EFF6FF" : "#F3E8FF",
-                        color: c.operation_type === "transport" ? "#2563EB" : "#7C3AED",
+                  <tr key={c.id} className="cursor-pointer" onClick={() => setDetailClient(c)}>
+                    <td className="font-bold text-[14px]" style={{ color: "var(--text-primary)" }}>{c.name}</td>
+                    <td style={{ color: "var(--text-muted)" }}>{c.commercial_name || "—"}</td>
+                    <td>
+                      <span className="chip text-[10px]" style={{
+                        background: c.operation_type === "transport" ? "var(--primary-fixed)" : "var(--purple-bg)",
+                        color: c.operation_type === "transport" ? "var(--primary)" : "var(--purple)",
                       }}>{c.operation_type === "transport" ? "نقل" : "نقل وبيع"}</span>
                     </td>
-                    <td className="p-3 border-b border-slate-100 text-xs text-slate-500">{c.cr_number || "—"}</td>
-                    <td className="p-3 border-b border-slate-100">
-                      <span className="text-xs font-bold text-blue-600">{siteCounts[c.id] || 0}</span>
-                      <span className="text-[10px] text-slate-400 mr-1">موقع</span>
+                    <td style={{ fontFamily: "var(--font-data)", color: "var(--text-muted)" }}>{c.cr_number || "—"}</td>
+                    <td>
+                      <span className="font-bold" style={{ color: "var(--primary)", fontFamily: "var(--font-data)" }}>{siteCounts[c.id] || 0}</span>
+                      <span className="text-[10px] mr-1" style={{ color: "var(--text-faint)" }}>موقع</span>
                     </td>
-                    <td className="p-3 border-b border-slate-100">
-                      <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{
-                        background: c.is_active ? "#DCFCE7" : "#FEE2E2",
-                        color: c.is_active ? "#16A34A" : "#DC2626",
+                    <td>
+                      <span className="chip text-[10px]" style={{
+                        background: c.is_active ? "var(--success-bg)" : "var(--danger-bg)",
+                        color: c.is_active ? "var(--success)" : "var(--danger)",
                       }}>{c.is_active ? "نشط" : "غير نشط"}</span>
                     </td>
-                    <td className="p-3 border-b border-slate-100" onClick={e => e.stopPropagation()}>
+                    <td onClick={e => e.stopPropagation()}>
                       <div className="flex gap-1.5">
-                        <button onClick={() => setDetailClient(c)} className="text-[10px] text-blue-600 bg-blue-50 px-2 py-1 rounded hover:bg-blue-100">📍 المواقع</button>
-                        <button onClick={() => { setEditClient(c); setShowForm(true); }} className="text-[10px] text-slate-600 bg-slate-50 px-2 py-1 rounded hover:bg-slate-100">✏️</button>
-                        <button onClick={() => handleDelete(c.id, c.name)} className="text-[10px] text-red-600 bg-red-50 px-2 py-1 rounded hover:bg-red-100">🗑️</button>
+                        <button onClick={() => setDetailClient(c)}
+                          className="btn-icon transition-all" title="المواقع"
+                          style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--primary)"; e.currentTarget.style.color = "white"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--primary-fixed)"; e.currentTarget.style.color = "var(--primary)"; }}>📍</button>
+                        <button onClick={() => { setEditClient(c); setShowForm(true); }}
+                          className="btn-icon transition-all" title="تعديل"
+                          style={{ background: "var(--surface)", color: "var(--text-muted)" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--primary)"; e.currentTarget.style.color = "white"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface)"; e.currentTarget.style.color = "var(--text-muted)"; }}>✏️</button>
+                        <button onClick={() => handleDelete(c.id, c.name)}
+                          className="btn-icon transition-all" title="حذف"
+                          style={{ background: "var(--danger-bg)", color: "var(--danger)" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--danger)"; e.currentTarget.style.color = "white"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--danger-bg)"; e.currentTarget.style.color = "var(--danger)"; }}>🗑️</button>
                       </div>
                     </td>
                   </tr>

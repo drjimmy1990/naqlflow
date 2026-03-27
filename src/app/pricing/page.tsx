@@ -119,7 +119,7 @@ export default function PricingPage() {
 
         {/* Add/Edit Form (inline) */}
         {showForm && (
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-5 mb-4 ani-scale">
+          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-5 mb-4 ani-scale">
             <h3 className="text-sm font-bold mb-3">{editId ? "تعديل سعر" : "إضافة سعر جديد"}</h3>
             {error && <div className="bg-red-50 text-red-700 text-xs p-2 rounded-lg mb-3">{error}</div>}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -142,9 +142,9 @@ export default function PricingPage() {
                 <input type="number" step="0.01" className={inputClass} value={form.total_price} onChange={e => set("total_price", e.target.value)} required dir="ltr" /></div>
             </div>
             <div className="flex gap-2 mt-3">
-              <button type="submit" disabled={saving} className="px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white disabled:opacity-50">
+              <button type="submit" disabled={saving} className="px-4 py-2 rounded-md text-xs font-semibold bg-blue-600 text-white disabled:opacity-50">
                 {saving ? "..." : editId ? "تحديث" : "إضافة"}</button>
-              <button type="button" onClick={resetForm} className="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200">إلغاء</button>
+              <button type="button" onClick={resetForm} className="px-4 py-2 rounded-md text-xs font-semibold border border-slate-200">إلغاء</button>
             </div>
           </form>
         )}
@@ -153,7 +153,7 @@ export default function PricingPage() {
         {loading ? (
           <div className="text-center py-20 text-slate-400 animate-pulse">⏳ جاري التحميل...</div>
         ) : Object.keys(grouped).length === 0 ? (
-          <div className="text-center py-16 text-slate-400 bg-white rounded-2xl shadow-sm">
+          <div className="text-center py-16 text-slate-400 bg-white rounded-lg shadow-sm">
             <div className="text-5xl mb-3">💰</div>
             <p className="text-sm font-medium">لا توجد أسعار</p>
           </div>

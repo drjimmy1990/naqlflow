@@ -35,7 +35,6 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
 
     const items: ExpiringDoc[] = [];
 
-    // Driver docs
     (drivers || []).forEach((d: Record<string, string>) => {
       const docs = [
         { key: "national_id_expiry", label: "الهوية" },
@@ -52,7 +51,6 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
       });
     });
 
-    // Vehicle docs
     (vehicles || []).forEach((v: Record<string, string>) => {
       const docs = [
         { key: "registration_expiry", label: "الاستمارة" },
@@ -74,7 +72,6 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
 
   const urgentCount = alerts.filter(a => a.days_left < 30).length;
 
-  // Close on outside click
   useEffect(() => {
     if (!showNotif) return;
     const handler = (e: MouseEvent) => {
@@ -86,18 +83,12 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
   }, [showNotif]);
 
   return (
-    <div className="px-8 py-5 flex items-center justify-between sticky top-0 z-10 ani-fade"
-      style={{
-        background: "rgba(247, 249, 251, 0.85)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(194, 198, 214, 0.12)",
-      }}>
+    <div className="page-header">
       <div>
-        <h1 className="m-0 text-xl font-bold tracking-tight" style={{
+        <h1 className="m-0 text-[22px] font-bold tracking-tight" style={{
           fontFamily: "var(--font-display)",
           color: "var(--text-primary)",
-          letterSpacing: "-0.02em",
+          letterSpacing: "-0.03em",
         }}>
           {title}
         </h1>
@@ -115,18 +106,22 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
         <div className="relative notif-panel">
           <button
             onClick={(e) => { e.stopPropagation(); loadAlerts(); setShowNotif(!showNotif); }}
-            className="relative p-2.5 rounded-xl transition-all duration-200"
+            className="relative p-2.5 rounded-md transition-all duration-200 cursor-pointer"
             style={{
               color: "var(--text-muted)",
               background: showNotif ? "var(--primary-fixed)" : "transparent",
+              boxShadow: showNotif ? "var(--shadow-sm)" : "none",
             }}
-            onMouseEnter={(e) => { if (!showNotif) (e.currentTarget).style.background = "var(--surface-low)"; }}
+            onMouseEnter={(e) => { if (!showNotif) (e.currentTarget).style.background = "var(--surface-card)"; }}
             onMouseLeave={(e) => { if (!showNotif) (e.currentTarget).style.background = "transparent"; }}
           >
             🔔
             {urgentCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full text-[10px] font-bold flex items-center justify-center text-white px-1"
-                style={{ background: "var(--danger)", boxShadow: "0 0 8px rgba(220, 38, 38, 0.4)" }}>
+                style={{
+                  background: "linear-gradient(135deg, #DC2626, #EF4444)",
+                  boxShadow: "0 2px 8px rgba(220, 38, 38, 0.4)",
+                }}>
                 {urgentCount}
               </span>
             )}
@@ -134,32 +129,46 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
 
           {/* Dropdown */}
           {showNotif && (
-            <div className="absolute left-0 top-full mt-2 w-[340px] rounded-2xl overflow-hidden ani-scale"
-              style={{ background: "var(--surface-card)", boxShadow: "var(--shadow-xl)", border: "1px solid rgba(194,198,214,0.12)", zIndex: 100 }}>
-              <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(194,198,214,0.12)" }}>
+            <div className="absolute left-0 top-full mt-2 w-[360px] rounded-lg overflow-hidden ani-scale"
+              style={{
+                background: "var(--surface-card)",
+                boxShadow: "var(--shadow-2xl)",
+                border: "1px solid var(--border)",
+                zIndex: 100,
+              }}>
+              <div className="px-4 py-3.5 flex items-center justify-between"
+                style={{ background: "var(--surface)", borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
                 <span className="text-[14px] font-bold" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>⚠️ تنبيهات الوثائق</span>
-                <span className="chip text-[10px]" style={{ background: urgentCount > 0 ? "var(--danger-bg)" : "var(--success-bg)", color: urgentCount > 0 ? "var(--danger)" : "var(--success)" }}>
+                <span className="chip text-[10px]" style={{
+                  background: urgentCount > 0 ? "var(--danger-bg)" : "var(--success-bg)",
+                  color: urgentCount > 0 ? "var(--danger)" : "var(--success)",
+                }}>
                   {urgentCount > 0 ? `${urgentCount} عاجل` : "لا يوجد"}
                 </span>
               </div>
 
-              <div className="max-h-[320px] overflow-y-auto">
+              <div className="max-h-[340px] overflow-y-auto">
                 {!loaded ? (
-                  <div className="text-center py-8 text-[12px] animate-pulse" style={{ color: "var(--text-faint)" }}>جاري التحميل...</div>
+                  <div className="text-center py-10 text-[12px] animate-pulse" style={{ color: "var(--text-faint)" }}>جاري التحميل...</div>
                 ) : alerts.length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="text-2xl mb-2">✅</div>
-                    <div className="text-[13px] font-medium" style={{ color: "var(--text-muted)" }}>جميع الوثائق سارية</div>
+                  <div className="text-center py-10">
+                    <div className="text-3xl mb-2">✅</div>
+                    <div className="text-[13px] font-semibold" style={{ color: "var(--text-secondary)" }}>جميع الوثائق سارية</div>
                     <div className="text-[11px] mt-1" style={{ color: "var(--text-faint)" }}>لا توجد وثائق تنتهي خلال 60 يوم</div>
                   </div>
                 ) : (
                   alerts.map((a, i) => (
-                    <div key={i} className="px-4 py-3 flex items-center gap-3 transition-colors hover:bg-slate-50/50"
-                      style={{ borderBottom: "1px solid rgba(194,198,214,0.08)" }}>
+                    <div key={i} className="px-4 py-3 flex items-center gap-3 transition-colors"
+                      style={{
+                        borderBottom: "1px solid rgba(0,0,0,0.03)",
+                        background: a.days_left < 0 ? "var(--danger-surface)" : "transparent",
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = a.days_left < 0 ? "var(--danger-bg)" : "var(--primary-surface)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = a.days_left < 0 ? "var(--danger-surface)" : "transparent"; }}>
                       <div className="w-2.5 h-2.5 rounded-full shrink-0"
                         style={{
                           background: a.days_left < 0 ? "var(--danger)" : a.days_left < 30 ? "var(--warning)" : "var(--info)",
-                          boxShadow: a.days_left < 0 ? "0 0 8px rgba(220,38,38,0.4)" : a.days_left < 30 ? "0 0 8px rgba(217,119,6,0.4)" : "none",
+                          boxShadow: a.days_left < 0 ? "var(--shadow-glow-danger)" : a.days_left < 30 ? "0 0 8px rgba(217,119,6,0.35)" : "none",
                         }} />
                       <div className="flex-1 min-w-0">
                         <div className="text-[12px] font-bold truncate" style={{ color: "var(--text-primary)" }}>
@@ -181,11 +190,12 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
         </div>
 
         {/* Date */}
-        <span className="text-[12px] font-medium px-4 py-2 rounded-xl" style={{
+        <span className="text-[12px] font-medium px-4 py-2 rounded-md" style={{
           background: "var(--surface-card)",
           color: "var(--text-muted)",
-          boxShadow: "var(--shadow-sm)",
+          boxShadow: "var(--shadow-xs)",
           fontFamily: "var(--font-data)",
+          border: "1px solid var(--border)",
         }}>
           {new Date().toLocaleDateString("ar-SA", { day: "numeric", month: "long", year: "numeric" })}
         </span>

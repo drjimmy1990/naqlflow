@@ -71,16 +71,16 @@ function DriverForm({ driver, onSave, onCancel }: { driver: Partial<Driver> | nu
   return (
     <>
       <div className="fixed inset-0 z-50 ani-fade" onClick={onCancel}
-        style={{ background: "rgba(15, 23, 42, 0.45)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />
+        style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
       <div className="fixed inset-0 z-[60] flex items-start justify-center pt-8 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto p-7 ani-scale"
-        style={{ boxShadow: "var(--shadow-xl)" }}>
+        className="pointer-events-auto bg-white rounded-md w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6 ani-scale"
+        style={{ boxShadow: "var(--shadow-xl)", border: "1px solid var(--border)" }}>
         <h2 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)" }}>
           {isEdit ? "تعديل سائق" : "إضافة سائق جديد"}
         </h2>
         <p className="text-[13px] mb-5" style={{ color: "var(--text-muted)" }}>بيانات السائق والوثائق</p>
-        {error && <div className="p-3 rounded-xl mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
+        {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
         <div className="grid grid-cols-2 gap-4 mb-5">
           <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>الرقم الوظيفي *</label><input className="input-field" value={form.employee_number} onChange={e => set("employee_number", e.target.value)} required /></div>
@@ -113,8 +113,8 @@ function DriverForm({ driver, onSave, onCancel }: { driver: Partial<Driver> | nu
         <div className="mt-4"><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>ملاحظات</label><textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} /></div>
 
         <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(194,198,214,0.15)" }}>
-          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-xl text-[13px]">إلغاء</button>
-          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-xl text-[13px] disabled:opacity-50">
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "جاري الحفظ..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>
@@ -169,14 +169,14 @@ export default function DriversPage() {
         ) : (
           <div className="stg grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {drivers.map(d => (
-              <div key={d.id} className="card hov-lift p-0 relative overflow-hidden">
+              <div key={d.id} className="card hov-lift p-0 relative overflow-hidden" style={{ borderRadius: "var(--radius-lg)" }}>
                 {/* Color strip top */}
-                <div className="h-1 rounded-t-2xl" style={{ background: d.is_active ? "linear-gradient(90deg, var(--success), #10B981)" : "linear-gradient(90deg, var(--danger), #EF4444)" }} />
+                <div className="h-1" style={{ borderRadius: "var(--radius-lg) var(--radius-lg) 0 0", background: d.is_active ? "var(--success)" : "var(--danger)" }} />
 
                 {/* Header */}
                 <div className="p-5 pb-0">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg shrink-0"
+                    <div className="w-11 h-11 rounded-lg flex items-center justify-center font-bold text-base shrink-0"
                       style={{
                         background: d.is_active ? "linear-gradient(135deg, #D1FAE5, #A7F3D0)" : "linear-gradient(135deg, #FEE2E2, #FECACA)",
                         color: d.is_active ? "var(--success)" : "var(--danger)",
@@ -198,12 +198,12 @@ export default function DriversPage() {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 mx-5 mt-4 p-3 rounded-xl" style={{ background: "var(--surface-low)" }}>
+                <div className="grid grid-cols-3 mx-5 mt-4 p-3 rounded-lg" style={{ background: "var(--surface-low)", border: "1px solid var(--border-light)" }}>
                   <div className="text-center">
                     <div className="data-number text-[18px] font-bold" style={{ color: "var(--primary)" }}>{d.employee_number}</div>
                     <div className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>الرقم الوظيفي</div>
                   </div>
-                  <div className="text-center" style={{ borderRight: "1px solid rgba(194,198,214,0.15)", borderLeft: "1px solid rgba(194,198,214,0.15)" }}>
+                  <div className="text-center" style={{ borderRight: "1px solid var(--border)", borderLeft: "1px solid var(--border)" }}>
                     <div className="data-number text-[18px] font-bold" style={{ color: "var(--warning)" }}>
                       {d.general_rating ? `${d.general_rating}` : "—"}
                     </div>
@@ -216,7 +216,7 @@ export default function DriversPage() {
                 </div>
 
                 {/* Document Dots */}
-                <div className="mx-5 mt-3 p-3 rounded-xl grid grid-cols-2 gap-y-2" style={{ background: "var(--surface-low)" }}>
+                <div className="mx-5 mt-3 p-3 rounded-lg grid grid-cols-2 gap-y-2" style={{ background: "var(--surface-low)", border: "1px solid var(--border-light)" }}>
                   <DocDot date={d.national_id_expiry} label="الهوية" />
                   <DocDot date={d.license_expiry} label="الرخصة" />
                   <DocDot date={d.aramco_card_expiry} label="أرامكو" />
@@ -226,14 +226,14 @@ export default function DriversPage() {
                 {/* Actions */}
                 <div className="flex gap-2 p-5 pt-4">
                   <button onClick={() => { setEditDriver(d); setShowForm(true); }}
-                    className="flex-1 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5"
+                    className="flex-1 py-2 rounded-md text-[12px] font-semibold transition-all duration-150 flex items-center justify-center gap-1.5"
                     style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}
                     onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--primary)"; (e.currentTarget).style.color = "#fff"; }}
                     onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--primary-fixed)"; (e.currentTarget).style.color = "var(--primary)"; }}>
                     ✏️ تعديل
                   </button>
                   <button onClick={() => handleDelete(d.id, d.name)}
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-[14px] transition-all duration-200 shrink-0"
+                    className="w-9 h-9 rounded-md flex items-center justify-center text-[13px] transition-all duration-150 shrink-0"
                     style={{ background: "var(--surface-low)", color: "var(--text-muted)" }}
                     onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--danger-bg)"; (e.currentTarget).style.color = "var(--danger)"; }}
                     onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--surface-low)"; (e.currentTarget).style.color = "var(--text-muted)"; }}>

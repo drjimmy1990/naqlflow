@@ -68,12 +68,12 @@ function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCan
     <>
       {/* Layer 1: Backdrop */}
       <div className="fixed inset-0 z-50 ani-fade" onClick={onCancel}
-        style={{ background: "rgba(15, 23, 42, 0.45)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />
+        style={{ background: "rgba(0, 0, 0, 0.4)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
       {/* Layer 2: Form */}
       <div className="fixed inset-0 z-[60] flex items-start justify-center pt-8 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-2xl w-full max-w-2xl max-h-[88vh] overflow-y-auto p-7 ani-scale"
-        style={{ boxShadow: "var(--shadow-xl)" }}>
+        className="pointer-events-auto bg-white rounded-md w-full max-w-2xl max-h-[88vh] overflow-y-auto p-6 ani-scale"
+        style={{ boxShadow: "var(--shadow-xl)", border: "1px solid var(--border)" }}>
         <h2 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
           {isEdit ? "تعديل طلب" : "إنشاء طلب جديد"}
         </h2>
@@ -81,7 +81,7 @@ function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCan
           {isEdit ? "تعديل بيانات الطلب الحالي" : "أدخل بيانات الطلب الجديد"}
         </p>
 
-        {error && <div className="p-3 rounded-xl mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
+        {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
         <div className="space-y-5">
           {/* Client + Site */}
@@ -160,8 +160,8 @@ function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCan
 
         {/* Actions */}
         <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(194,198,214,0.15)" }}>
-          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-xl text-[13px]">إلغاء</button>
-          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-xl text-[13px] disabled:opacity-50">
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-2.5 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-2.5 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "جاري الحفظ..." : isEdit ? "تحديث الطلب" : "✦ إنشاء الطلب"}
           </button>
         </div>
@@ -246,12 +246,11 @@ export default function OrdersPage() {
         {/* Status Filter — Horizontal Scroll */}
         <div className="flex gap-2 mb-6 flex-wrap ani-up">
           <button onClick={() => setStatusFilter("all")}
-            className="px-4 py-2 rounded-xl text-[12px] font-bold transition-all duration-200"
+            className="px-3.5 py-1.5 rounded-md text-[12px] font-semibold transition-all duration-150"
             style={{
-              background: statusFilter === "all" ? "linear-gradient(135deg, var(--primary), var(--primary-container))" : "var(--surface-card)",
+              background: statusFilter === "all" ? "var(--primary)" : "var(--surface-card)",
               color: statusFilter === "all" ? "#fff" : "var(--text-secondary)",
-              boxShadow: statusFilter === "all" ? "0 3px 12px rgba(0,88,190,0.25)" : "var(--shadow-sm)",
-              border: statusFilter === "all" ? "none" : "1px solid rgba(194,198,214,0.12)",
+              border: statusFilter === "all" ? "1px solid var(--primary)" : "1px solid var(--border)",
             }}>
             الكل ({orders.length})
           </button>
@@ -261,12 +260,11 @@ export default function OrdersPage() {
             const isActive = statusFilter === s;
             return (
               <button key={s} onClick={() => setStatusFilter(s)}
-                className="px-4 py-2 rounded-xl text-[12px] font-bold transition-all duration-200 flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-md text-[12px] font-semibold transition-all duration-150 flex items-center gap-1.5"
                 style={{
                   background: isActive ? cfg.color : "var(--surface-card)",
                   color: isActive ? "#fff" : cfg.color,
-                  boxShadow: isActive ? `0 3px 12px ${cfg.color}40` : "var(--shadow-sm)",
-                  border: isActive ? "none" : "1px solid rgba(194,198,214,0.12)",
+                  border: isActive ? `1px solid ${cfg.color}` : "1px solid var(--border)",
                 }}>
                 <span className="text-[13px]">{cfg.icon}</span>
                 {cfg.label}

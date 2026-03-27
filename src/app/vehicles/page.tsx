@@ -75,11 +75,11 @@ function VehicleForm({ vehicle, drivers, onSave, onCancel }: { vehicle: Partial<
         style={{ background: "rgba(15, 23, 42, 0.45)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />
       <div className="fixed inset-0 z-[60] flex items-start justify-center pt-8 pointer-events-none">
       <form onSubmit={handleSubmit}
-        className="pointer-events-auto bg-white rounded-2xl w-full max-w-2xl max-h-[88vh] overflow-y-auto p-7 ani-scale"
+        className="pointer-events-auto bg-white rounded-lg w-full max-w-2xl max-h-[88vh] overflow-y-auto p-7 ani-scale"
         style={{ boxShadow: "var(--shadow-xl)" }}>
         <h2 className="text-xl font-bold mb-1" style={{ fontFamily: "var(--font-display)" }}>{isEdit ? "تعديل صهريج" : "إضافة صهريج جديد"}</h2>
         <p className="text-[13px] mb-5" style={{ color: "var(--text-muted)" }}>بيانات الصهريج والوثائق</p>
-        {error && <div className="p-3 rounded-xl mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
+        {error && <div className="p-3 rounded-md mb-4 text-[12px] font-semibold" style={{ background: "var(--danger-bg)", color: "var(--danger)" }}>⚠️ {error}</div>}
 
         <div className="grid grid-cols-2 gap-4 mb-5">
           <div><label className="text-[12px] font-bold mb-2 block" style={{ color: "var(--text-secondary)" }}>رقم الصهريج *</label><input className="input-field" value={form.tanker_number} onChange={e => set("tanker_number", e.target.value)} required /></div>
@@ -124,8 +124,8 @@ function VehicleForm({ vehicle, drivers, onSave, onCancel }: { vehicle: Partial<
         </div>
 
         <div className="flex gap-3 mt-6 pt-5" style={{ borderTop: "1px solid rgba(194,198,214,0.15)" }}>
-          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-xl text-[13px]">إلغاء</button>
-          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-xl text-[13px] disabled:opacity-50">
+          <button type="button" onClick={onCancel} className="btn-ghost flex-1 py-3 rounded-md text-[13px]">إلغاء</button>
+          <button type="submit" disabled={saving} className="btn-primary flex-1 py-3 rounded-md text-[13px] disabled:opacity-50">
             {saving ? "..." : isEdit ? "تحديث" : "✦ إضافة"}
           </button>
         </div>
@@ -202,7 +202,7 @@ export default function VehiclesPage() {
                   {/* Header */}
                   <div className="p-5 pb-0">
                     <div className="flex items-center gap-3.5">
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                      <div className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl shrink-0"
                         style={{ background: `${fuelColor}12` }}>
                         🚛
                       </div>
@@ -220,7 +220,7 @@ export default function VehiclesPage() {
                   </div>
 
                   {/* Stats */}
-                  <div className="grid grid-cols-3 mx-5 mt-4 p-3 rounded-xl" style={{ background: "var(--surface-low)" }}>
+                  <div className="grid grid-cols-3 mx-5 mt-4 p-3 rounded-md" style={{ background: "var(--surface-low)" }}>
                     <div className="text-center">
                       <div className="data-number text-[18px] font-bold" style={{ color: fuelColor }}>
                         {(v.tank_capacity_liters / 1000).toFixed(0)}K
@@ -241,7 +241,7 @@ export default function VehiclesPage() {
 
                   {/* Driver */}
                   {driverName && (
-                    <div className="mx-5 mt-3 p-2.5 rounded-xl flex items-center gap-2" style={{ background: "var(--surface-low)" }}>
+                    <div className="mx-5 mt-3 p-2.5 rounded-md flex items-center gap-2" style={{ background: "var(--surface-low)" }}>
                       <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold"
                         style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}>
                         {driverName.charAt(0)}
@@ -254,7 +254,7 @@ export default function VehiclesPage() {
                   )}
 
                   {/* Document Dots */}
-                  <div className="mx-5 mt-3 p-3 rounded-xl flex gap-2" style={{ background: "var(--surface-low)" }}>
+                  <div className="mx-5 mt-3 p-3 rounded-md flex gap-2" style={{ background: "var(--surface-low)" }}>
                     <DocDot date={v.registration_expiry} label="الاستمارة" />
                     <DocDot date={v.inspection_expiry} label="الفحص" />
                     <DocDot date={v.operating_card_expiry} label="التشغيل" />
@@ -263,14 +263,14 @@ export default function VehiclesPage() {
                   {/* Actions */}
                   <div className="flex gap-2 p-5 pt-4">
                     <button onClick={() => { setEditVehicle(v); setShowForm(true); }}
-                      className="flex-1 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2.5 rounded-md text-[12px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5"
                       style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}
                       onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--primary)"; (e.currentTarget).style.color = "#fff"; }}
                       onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--primary-fixed)"; (e.currentTarget).style.color = "var(--primary)"; }}>
                       ✏️ تعديل
                     </button>
                     <button onClick={() => handleDelete(v.id, v.tanker_number)}
-                      className="w-10 h-10 rounded-xl flex items-center justify-center text-[14px] transition-all duration-200 shrink-0"
+                      className="w-10 h-10 rounded-md flex items-center justify-center text-[14px] transition-all duration-200 shrink-0"
                       style={{ background: "var(--surface-low)", color: "var(--text-muted)" }}
                       onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--danger-bg)"; (e.currentTarget).style.color = "var(--danger)"; }}
                       onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--surface-low)"; (e.currentTarget).style.color = "var(--text-muted)"; }}>

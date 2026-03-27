@@ -13,7 +13,7 @@ function KPICard({ label, value, icon, gradient, subtitle }: {
 }) {
   return (
     <div className="kpi-card flex-1 min-w-[180px] flex items-center gap-4 ani-up">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl text-white shrink-0 ${gradient}`}
+      <div className={`w-12 h-12 rounded-md flex items-center justify-center text-xl text-white shrink-0 ${gradient}`}
         style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.12)" }}>
         {icon}
       </div>
@@ -31,7 +31,7 @@ function KPICard({ label, value, icon, gradient, subtitle }: {
 // ── Quick Stats Row ──
 function QuickStat({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="flex items-center gap-2.5 p-3 rounded-xl transition-colors hover:bg-slate-50/50">
+    <div className="flex items-center gap-2.5 p-3 rounded-md transition-colors hover:bg-slate-50/50">
       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: color, boxShadow: `0 0 8px ${color}40` }} />
       <span className="flex-1 text-[12px] font-medium" style={{ color: "var(--text-secondary)" }}>{label}</span>
       <span className="data-number text-[14px] font-bold" style={{ color: "var(--text-primary)" }}>{value}</span>
@@ -98,7 +98,7 @@ export default function DashboardPage() {
           <div className="card p-0 ani-up overflow-hidden">
             <div className="flex justify-between items-center px-6 py-4">
               <h3 className="text-[15px] font-bold m-0" style={{ fontFamily: "var(--font-display)" }}>آخر الطلبات</h3>
-              <a href="/orders" className="btn-ghost text-[12px] px-4 py-2 rounded-xl no-underline">
+              <a href="/orders" className="btn-ghost text-[12px] px-4 py-2 rounded-md no-underline">
                 عرض الكل ←
               </a>
             </div>
@@ -163,7 +163,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Map placeholder */}
-            <div className="rounded-2xl p-6 text-white text-center ani-left"
+            <div className="rounded-lg p-6 text-white text-center ani-left"
               style={{ background: "linear-gradient(150deg, #0B1120 0%, #1E293B 100%)", boxShadow: "var(--shadow-lg)" }}>
               <div className="text-3xl mb-2">🗺️</div>
               <div className="font-bold text-[14px]" style={{ fontFamily: "var(--font-display)" }}>
@@ -193,7 +193,7 @@ export default function DashboardPage() {
                   { href: "/clients", icon: "🏢", label: "العملاء" },
                 ].map(l => (
                   <a key={l.href} href={l.href}
-                    className="flex items-center gap-2 p-3 rounded-xl text-[12px] font-medium no-underline transition-all duration-150"
+                    className="flex items-center gap-2 p-3 rounded-md text-[12px] font-medium no-underline transition-all duration-150"
                     style={{ background: "var(--surface-low)", color: "var(--text-secondary)" }}
                     onMouseEnter={(e) => { (e.target as HTMLElement).style.background = "var(--primary-fixed)"; (e.target as HTMLElement).style.color = "var(--primary)"; }}
                     onMouseLeave={(e) => { (e.target as HTMLElement).style.background = "var(--surface-low)"; (e.target as HTMLElement).style.color = "var(--text-secondary)"; }}
