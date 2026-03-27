@@ -98,18 +98,20 @@ export default function PricingPage() {
     <div className="ani-page">
       <PageHeader title="قوائم الأسعار" subtitle={`${prices.length} سعر — عميل × صنف × حجم`}
         action={<button onClick={() => { resetForm(); setShowForm(true); }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-blue-700">+ إضافة سعر</button>} />
+          className="btn-primary text-[12px]">+ إضافة سعر</button>} />
 
       <div className="p-6">
         {/* Fuel Filter */}
         <div className="flex gap-2 mb-4 ani-up">
           <button onClick={() => setFuelFilter("all")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold ${fuelFilter === "all" ? "bg-blue-600 text-white" : "bg-white border border-slate-200 hover:border-slate-300"}`}>
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${fuelFilter === "all" ? "text-white" : "hover:shadow-sm"}`}
+            style={fuelFilter === "all" ? { background: "linear-gradient(135deg, var(--primary), var(--primary-container))", boxShadow: "0 2px 8px rgba(0,88,190,0.2)" } : { background: "var(--surface-card)", color: "var(--text-secondary)", border: "1px solid rgba(194,198,214,0.15)" }}>
             الكل ({prices.length})
           </button>
           {fuelTypes.map(f => (
             <button key={f.id} onClick={() => setFuelFilter(f.id)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold ${fuelFilter === f.id ? "bg-blue-600 text-white" : "bg-white border border-slate-200 hover:border-slate-300"}`}>
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${fuelFilter === f.id ? "text-white" : "hover:shadow-sm"}`}
+              style={fuelFilter === f.id ? { background: "linear-gradient(135deg, var(--primary), var(--primary-container))", boxShadow: "0 2px 8px rgba(0,88,190,0.2)" } : { background: "var(--surface-card)", color: "var(--text-secondary)", border: "1px solid rgba(194,198,214,0.15)" }}>
               {f.name}
             </button>
           ))}
@@ -158,37 +160,57 @@ export default function PricingPage() {
         ) : (
           <div className="space-y-4 stg">
             {Object.entries(grouped).map(([clientName, items]) => (
-              <div key={clientName} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                <div className="px-5 py-3 bg-slate-50 border-b border-slate-100 font-bold text-sm flex items-center gap-2">
-                  🏢 {clientName}
-                  <span className="text-[10px] font-normal text-slate-400">({items.length} تسعيرة)</span>
+              <div key={clientName} className="card overflow-hidden">
+                <div className="px-5 py-3 flex items-center gap-2" style={{ background: "var(--surface-low)", borderBottom: "1px solid rgba(194,198,214,0.10)" }}>
+                  <span className="font-bold text-[14px]" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>🏢 {clientName}</span>
+                  <span className="chip text-[10px]" style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}>({items.length} تسعيرة)</span>
                 </div>
-                <table className="w-full border-collapse">
+                <table className="table-premium" style={{ tableLayout: "fixed" }}>
+                  <colgroup>
+                    <col style={{ width: "20%" }} />
+                    <col style={{ width: "25%" }} />
+                    <col style={{ width: "15%" }} />
+                    <col style={{ width: "25%" }} />
+                    <col style={{ width: "15%" }} />
+                  </colgroup>
                   <thead>
                     <tr>
-                      {["نوع الوقود", "حجم الصهريج", "زيادة اللتر", "السعر الإجمالي", ""].map(h => (
-                        <th key={h} className="p-3 text-right border-b border-slate-100 text-slate-400 text-[10.5px] font-bold">{h}</th>
-                      ))}
+                      <th>نوع الوقود</th>
+                      <th>حجم الصهريج</th>
+                      <th>زيادة اللتر</th>
+                      <th>السعر الإجمالي</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     {items.map(p => (
-                      <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3 border-b border-slate-100 text-xs font-semibold">{p.fuel_name}</td>
-                        <td className="p-3 border-b border-slate-100 text-xs" dir="ltr">
-                          <span className="font-bold text-blue-600">{(p.capacity_liters / 1000).toFixed(0)}K</span>
-                          <span className="text-slate-400 mr-1">{p.capacity_liters.toLocaleString()} لتر</span>
+                      <tr key={p.id}>
+                        <td className="font-semibold">{p.fuel_name}</td>
+                        <td>
+                          <span className="font-bold" style={{ color: "var(--primary)", fontFamily: "var(--font-data)" }}>{(p.capacity_liters / 1000).toFixed(0)}K</span>
+                          <span className="text-[11px] mr-1" style={{ color: "var(--text-faint)" }}>{p.capacity_liters.toLocaleString()} لتر</span>
                         </td>
-                        <td className="p-3 border-b border-slate-100 text-xs font-semibold text-amber-600" dir="ltr">
-                          {p.liter_increase || "—"}
+                        <td>
+                          <span className="font-semibold" style={{ color: "var(--warning)", fontFamily: "var(--font-data)" }}>{p.liter_increase || "—"}</span>
                         </td>
-                        <td className="p-3 border-b border-slate-100 text-xs font-bold text-green-700" dir="ltr" style={{ fontFamily: "var(--font-display)" }}>
-                          {p.total_price.toLocaleString()} <span className="text-[10px] text-slate-400 font-normal">ر.س</span>
+                        <td>
+                          <span className="font-bold" style={{ color: "var(--success)", fontFamily: "var(--font-data)" }}>
+                            ✦ {p.total_price.toLocaleString()}
+                          </span>
+                          <span className="text-[10px] mr-1" style={{ color: "var(--text-faint)" }}>ر.س</span>
                         </td>
-                        <td className="p-3 border-b border-slate-100">
-                          <div className="flex gap-1">
-                            <button onClick={() => startEdit(p)} className="text-[10px] text-blue-600 bg-blue-50 px-2 py-1 rounded hover:bg-blue-100">✏️</button>
-                            <button onClick={() => handleDelete(p.id)} className="text-[10px] text-red-600 bg-red-50 px-2 py-1 rounded hover:bg-red-100">🗑️</button>
+                        <td>
+                          <div className="flex gap-1.5">
+                            <button onClick={() => startEdit(p)} title="تعديل"
+                              className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] transition-all"
+                              style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}
+                              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--primary)"; e.currentTarget.style.color = "white"; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--primary-fixed)"; e.currentTarget.style.color = "var(--primary)"; }}>✏️</button>
+                            <button onClick={() => handleDelete(p.id)} title="حذف"
+                              className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] transition-all"
+                              style={{ background: "var(--danger-bg)", color: "var(--danger)" }}
+                              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--danger)"; e.currentTarget.style.color = "white"; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--danger-bg)"; e.currentTarget.style.color = "var(--danger)"; }}>🗑️</button>
                           </div>
                         </td>
                       </tr>

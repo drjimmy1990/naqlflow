@@ -12,21 +12,31 @@ export default function StatusBadge({ status, size = "md" }: StatusBadgeProps) {
   if (!s) return null;
 
   const sizeStyles = {
-    sm: "text-[10px] px-2 py-0.5",
-    md: "text-[11.5px] px-3 py-1",
-    lg: "text-[13px] px-4 py-1.5",
+    sm: { fontSize: "10px", padding: "3px 10px", gap: "3px" },
+    md: { fontSize: "11.5px", padding: "4px 14px", gap: "4px" },
+    lg: { fontSize: "13px", padding: "6px 16px", gap: "5px" },
   };
+
+  const st = sizeStyles[size];
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full font-semibold whitespace-nowrap ${sizeStyles[size]}`}
+      className="inline-flex items-center rounded-full font-semibold whitespace-nowrap"
       style={{
-        background: s.bg,
+        background: `${s.bg}`,
         color: s.color,
-        border: `1px solid ${s.color}18`,
+        fontSize: st.fontSize,
+        padding: st.padding,
+        gap: st.gap,
+        letterSpacing: "-0.01em",
+        boxShadow: `0 1px 4px ${s.color}12`,
       }}
     >
-      <span className={size === "lg" ? "text-sm" : "text-xs"}>{s.icon}</span>
+      <span className="flex items-center justify-center" style={{
+        width: size === "lg" ? 18 : size === "md" ? 15 : 13,
+        height: size === "lg" ? 18 : size === "md" ? 15 : 13,
+        fontSize: size === "lg" ? "12px" : size === "md" ? "11px" : "9px",
+      }}>{s.icon}</span>
       {s.label}
     </span>
   );
