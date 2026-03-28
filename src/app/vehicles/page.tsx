@@ -198,7 +198,7 @@ export default function VehiclesPage() {
           </button>
         } />
 
-      <div className="p-8">
+      <div style={{ padding: "24px 32px" }}>
         {loading ? (
           <div className="text-center py-20" style={{ color: "var(--text-faint)" }}>
             <div className="text-3xl mb-2 animate-pulse">🚛</div>جاري التحميل...
@@ -209,94 +209,89 @@ export default function VehiclesPage() {
             <p className="text-[14px] font-bold" style={{ color: "var(--text-muted)" }}>لا يوجد صهاريج</p>
           </div>
         ) : (
-          <div className="stg grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {vehicles.map(v => {
-              const fuelColor = v.fuel_type_carried ? FUEL_COLORS[v.fuel_type_carried] || "var(--primary)" : "var(--primary)";
+              const fuelColor = v.fuel_type_carried ? FUEL_COLORS[v.fuel_type_carried] || "#1D4ED8" : "#1D4ED8";
               const driverName = getDriverName(v.driver_id);
               return (
-                <div key={v.id} className="card hov-lift p-0 relative overflow-hidden">
-                  {/* Color strip */}
-                  <div className="h-1 rounded-t-2xl" style={{
-                    background: v.is_active
-                      ? `linear-gradient(90deg, ${fuelColor}, ${fuelColor}AA)`
-                      : "linear-gradient(90deg, var(--danger), #EF4444)"
-                  }} />
+                <div key={v.id} className="bg-white rounded-xl transition-all duration-200 hover:-translate-y-[2px] hover:shadow-lg"
+                  style={{ border: "1px solid #E5E7EB", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: "16px" }}>
 
                   {/* Header */}
-                  <div className="p-5 pb-0">
-                    <div className="flex items-center gap-3.5">
-                      <div className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl shrink-0"
-                        style={{ background: `${fuelColor}12` }}>
+                  <div className="pb-4" style={{ borderBottom: "1px solid #F3F4F6" }}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0"
+                        style={{ background: `${fuelColor}10`, border: `1.5px solid ${fuelColor}30` }}>
                         🚛
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="data-number text-[18px] font-bold" style={{ color: fuelColor }}>{v.tanker_number}</div>
-                        <div className="text-[11px]" style={{ color: "var(--text-faint)" }}>{v.brand} {v.model} {v.manufacture_year || ""}</div>
+                        <div className="text-[17px] font-bold" style={{ color: fuelColor, fontFamily: "var(--font-data)" }}>{v.tanker_number}</div>
+                        <div className="text-[11px] font-medium" style={{ color: "#9CA3AF" }}>{v.brand} {v.model} {v.manufacture_year || ""}</div>
                       </div>
-                      <span className="chip text-[10px]" style={{
-                        background: v.is_active ? "var(--success-bg)" : "var(--danger-bg)",
-                        color: v.is_active ? "var(--success)" : "var(--danger)",
-                      }}>
-                        {v.is_active ? "نشط" : "معطّل"}
+                      <span className="px-2.5 py-1 rounded-md text-[10px] font-bold"
+                        style={{
+                          background: v.is_active ? "#ECFDF5" : "#FEF2F2",
+                          color: v.is_active ? "#059669" : "#DC2626",
+                          border: `1px solid ${v.is_active ? "#D1FAE5" : "#FEE2E2"}`,
+                        }}>
+                        {v.is_active ? "● نشط" : "● معطّل"}
                       </span>
                     </div>
                   </div>
 
-                  {/* Stats */}
-                  <div className="grid grid-cols-3 mx-5 mt-4 p-3 rounded-md" style={{ background: "var(--surface-low)" }}>
-                    <div className="text-center">
-                      <div className="data-number text-[18px] font-bold" style={{ color: fuelColor }}>
+                  {/* Stats Row */}
+                  <div className="grid grid-cols-3 divide-x divide-x-reverse divide-gray-100 mt-3">
+                    <div className="py-3 text-center">
+                      <div className="text-[11px] font-medium mb-1" style={{ color: "#9CA3AF" }}>السعة</div>
+                      <div className="text-[16px] font-bold" style={{ color: fuelColor, fontFamily: "var(--font-data)" }}>
                         {(v.tank_capacity_liters / 1000).toFixed(0)}K
                       </div>
-                      <div className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>لتر</div>
                     </div>
-                    <div className="text-center" style={{ borderRight: "1px solid rgba(194,198,214,0.15)", borderLeft: "1px solid rgba(194,198,214,0.15)" }}>
-                      <div className="text-[13px] font-bold" style={{ color: "var(--text-primary)" }}>
+                    <div className="py-3 text-center">
+                      <div className="text-[11px] font-medium mb-1" style={{ color: "#9CA3AF" }}>الوقود</div>
+                      <div className="text-[13px] font-bold" style={{ color: "#111827" }}>
                         {v.fuel_type_carried ? FUEL_LABELS[v.fuel_type_carried] : "—"}
                       </div>
-                      <div className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>الوقود</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-[13px] font-bold" style={{ color: "var(--text-primary)" }}>{v.plate_number || "—"}</div>
-                      <div className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>اللوحة</div>
+                    <div className="py-3 text-center">
+                      <div className="text-[11px] font-medium mb-1" style={{ color: "#9CA3AF" }}>اللوحة</div>
+                      <div className="text-[13px] font-bold" style={{ color: "#111827" }}>{v.plate_number || "—"}</div>
                     </div>
                   </div>
 
-                  {/* Driver */}
-                  {driverName && (
-                    <div className="mx-5 mt-3 p-2.5 rounded-md flex items-center gap-2" style={{ background: "var(--surface-low)" }}>
-                      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold"
-                        style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}>
-                        {driverName.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="text-[11px] font-bold" style={{ color: "var(--text-primary)" }}>{driverName}</div>
-                        <div className="text-[9px]" style={{ color: "var(--text-faint)" }}>السائق المعيّن</div>
-                      </div>
+                  {/* Driver Assignment */}
+                  <div className="mt-3 p-3 rounded-lg flex items-center gap-2.5"
+                    style={{ background: driverName ? "#EFF6FF" : "#F9FAFB", border: `1px solid ${driverName ? "#DBEAFE" : "#E5E7EB"}` }}>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[12px] font-bold"
+                      style={{ background: driverName ? "#DBEAFE" : "#E5E7EB", color: driverName ? "#1D4ED8" : "#9CA3AF" }}>
+                      {driverName ? driverName.charAt(0) : "👤"}
                     </div>
-                  )}
+                    <div>
+                      <div className="text-[12px] font-bold" style={{ color: driverName ? "#1E40AF" : "#9CA3AF" }}>
+                        {driverName || "لا يوجد"}
+                      </div>
+                      <div className="text-[9px] font-medium" style={{ color: driverName ? "#93C5FD" : "#D1D5DB" }}>السائق المعيّن</div>
+                    </div>
+                  </div>
 
-                  {/* Document Dots */}
-                  <div className="mx-5 mt-3 p-3 rounded-md flex gap-2" style={{ background: "var(--surface-low)" }}>
-                    <DocDot date={v.registration_expiry} label="الاستمارة" />
-                    <DocDot date={v.inspection_expiry} label="الفحص" />
-                    <DocDot date={v.operating_card_expiry} label="التشغيل" />
+                  {/* Document Expiry */}
+                  <div className="py-3.5 mt-3 rounded-lg" style={{ background: "#FAFBFC" }}>
+                    <div className="flex gap-3 justify-around">
+                      <DocDot date={v.registration_expiry} label="الاستمارة" />
+                      <DocDot date={v.inspection_expiry} label="الفحص" />
+                      <DocDot date={v.operating_card_expiry} label="التشغيل" />
+                    </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex gap-2 p-5 pt-4">
+                  <div className="flex gap-2 pt-3" style={{ borderTop: "1px solid #F3F4F6", marginTop: "12px" }}>
                     <button onClick={() => { setEditVehicle(v); setShowForm(true); }}
-                      className="flex-1 py-2.5 rounded-md text-[12px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5"
-                      style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}
-                      onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--primary)"; (e.currentTarget).style.color = "#fff"; }}
-                      onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--primary-fixed)"; (e.currentTarget).style.color = "var(--primary)"; }}>
+                      className="btn-primary flex-1 py-2.5 text-[12px] flex items-center justify-center gap-1.5">
                       ✏️ تعديل
                     </button>
                     <button onClick={() => handleDelete(v.id, v.tanker_number)}
-                      className="w-10 h-10 rounded-md flex items-center justify-center text-[14px] transition-all duration-200 shrink-0"
-                      style={{ background: "var(--surface-low)", color: "var(--text-muted)" }}
-                      onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--danger-bg)"; (e.currentTarget).style.color = "var(--danger)"; }}
-                      onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--surface-low)"; (e.currentTarget).style.color = "var(--text-muted)"; }}>
+                      className="w-10 h-10 rounded-md flex items-center justify-center text-[14px] transition-all duration-200 hover:scale-110"
+                      style={{ background: "#FEF2F2", color: "#DC2626", border: "1px solid #FEE2E2" }}>
                       🗑️
                     </button>
                   </div>
@@ -304,6 +299,7 @@ export default function VehiclesPage() {
               );
             })}
           </div>
+
         )}
       </div>
 

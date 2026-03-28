@@ -28,6 +28,28 @@ function DocDot({ date, label }: { date: string | null; label: string }) {
   );
 }
 
+// ── Document Row (new polished style) ──
+function DocRow({ date, label }: { date: string | null; label: string }) {
+  const days = daysUntil(date);
+  const cfg = days === null
+    ? { color: "#CBD5E1", bg: "#F8FAFC", text: "غير محدد", icon: "○" }
+    : days < 0
+    ? { color: "#DC2626", bg: "#FEF2F2", text: `منتهي ${Math.abs(days)} يوم`, icon: "✕" }
+    : days < 30
+    ? { color: "#D97706", bg: "#FFFBEB", text: `${days} يوم`, icon: "!" }
+    : { color: "#059669", bg: "#ECFDF5", text: `${days} يوم`, icon: "✓" };
+  return (
+    <div className="flex items-center justify-between py-2 px-3 rounded-lg" style={{ background: cfg.bg }}>
+      <div className="flex items-center gap-2">
+        <span className="w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold"
+          style={{ background: `${cfg.color}18`, color: cfg.color }}>{cfg.icon}</span>
+        <span className="text-[11px] font-semibold" style={{ color: "#334155" }}>{label}</span>
+      </div>
+      <span className="text-[10px] font-bold" style={{ color: cfg.color }}>{cfg.text}</span>
+    </div>
+  );
+}
+
 // ── ExpiryBadge (for forms) ──
 function ExpiryBadge({ date, label }: { date: string | null; label: string }) {
   const days = daysUntil(date);
@@ -180,7 +202,7 @@ export default function DriversPage() {
           </button>
         } />
 
-      <div className="p-8">
+      <div style={{ padding: "24px 32px" }}>
         {loading ? (
           <div className="text-center py-20" style={{ color: "var(--text-faint)" }}>
             <div className="text-3xl mb-2 animate-pulse">👤</div>جاري التحميل...
@@ -192,81 +214,99 @@ export default function DriversPage() {
             <p className="text-[12px] mt-1" style={{ color: "var(--text-faint)" }}>أضف أول سائق بالضغط على "+ إضافة سائق"</p>
           </div>
         ) : (
-          <div className="stg grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {drivers.map(d => (
-              <div key={d.id} className="card hov-lift p-0 relative overflow-hidden" style={{ borderRadius: "var(--radius-lg)" }}>
-                {/* Color strip top */}
-                <div className="h-1" style={{ borderRadius: "var(--radius-lg) var(--radius-lg) 0 0", background: d.is_active ? "var(--success)" : "var(--danger)" }} />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {drivers.map(d => {
+              const statusColor = d.is_active ? "#059669" : "#DC2626";
+              const statusBg = d.is_active ? "#ECFDF5" : "#FEF2F2";
+              const statusBorder = d.is_active ? "#A7F3D0" : "#FECACA";
+              return (
+                <div key={d.id}
+                  className="rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col"
+                  style={{
+                    background: "#fff",
+                    border: "1px solid #E2E8F0",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
+                    padding: "16px",
+                  }}>
 
-                {/* Header */}
-                <div className="p-5 pb-0">
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-11 h-11 rounded-lg flex items-center justify-center font-bold text-base shrink-0"
-                      style={{
-                        background: d.is_active ? "linear-gradient(135deg, #D1FAE5, #A7F3D0)" : "linear-gradient(135deg, #FEE2E2, #FECACA)",
-                        color: d.is_active ? "var(--success)" : "var(--danger)",
-                        fontFamily: "var(--font-display)",
-                      }}>
-                      {d.name.charAt(0)}
+                  {/* ─── Profile Header ─── */}
+                  <div className="pb-3 text-center"
+                    style={{ borderBottom: "1px solid #F1F5F9" }}>
+                    
+                    {/* Name */}
+                    <h3 className="text-[17px] font-bold mb-0.5" style={{ color: "#0F172A" }}>{d.name}</h3>
+                    
+                    {/* Phone */}
+                    <div className="text-[12px] font-medium mb-2.5" dir="ltr"
+                      style={{ color: "#94A3B8", fontFamily: "var(--font-data)", letterSpacing: "0.5px" }}>
+                      {d.phone || "—"}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-bold text-[15px] truncate" style={{ color: "var(--text-primary)" }}>{d.name}</div>
-                      <div className="text-[11px] mt-0.5" dir="ltr" style={{ color: "var(--text-faint)", fontFamily: "var(--font-data)" }}>{d.phone || "—"}</div>
+
+                    {/* Employee Number */}
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg mb-2"
+                      style={{ background: "#EFF6FF", border: "1px solid #DBEAFE" }}>
+                      <span className="text-[10px] font-medium" style={{ color: "#64748B" }}>الرقم الوظيفي</span>
+                      <span className="text-[13px] font-bold" style={{ color: "#1D4ED8", fontFamily: "var(--font-data)" }}>{d.employee_number}</span>
                     </div>
-                    <span className="chip text-[10px]" style={{
-                      background: d.is_active ? "var(--success-bg)" : "var(--danger-bg)",
-                      color: d.is_active ? "var(--success)" : "var(--danger)",
-                    }}>
-                      {d.is_active ? "نشط" : "غير نشط"}
-                    </span>
-                  </div>
-                </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 mx-5 mt-4 p-3 rounded-lg" style={{ background: "var(--surface-low)", border: "1px solid var(--border-light)" }}>
-                  <div className="text-center">
-                    <div className="data-number text-[18px] font-bold" style={{ color: "var(--primary)" }}>{d.employee_number}</div>
-                    <div className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>الرقم الوظيفي</div>
-                  </div>
-                  <div className="text-center" style={{ borderRight: "1px solid var(--border)", borderLeft: "1px solid var(--border)" }}>
-                    <div className="data-number text-[18px] font-bold" style={{ color: "var(--warning)" }}>
-                      {d.general_rating ? `${d.general_rating}` : "—"}
+                    {/* Status Badge */}
+                    <div>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold"
+                        style={{ background: statusBg, color: statusColor, border: `1px solid ${statusBorder}` }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
+                        {d.is_active ? "نشط" : "غير نشط"}
+                      </span>
                     </div>
-                    <div className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>التقييم ⭐</div>
                   </div>
-                  <div className="text-center">
-                    <div className="data-number text-[18px] font-bold" style={{ color: "var(--success)" }}>{d.total_trips}</div>
-                    <div className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>رحلة</div>
+
+                  {/* ─── Stats Bar ─── */}
+                  <div className="grid grid-cols-2 mt-3 rounded-xl overflow-hidden"
+                    style={{ border: "1px solid #E2E8F0" }}>
+                    <div className="py-3.5 text-center" style={{ borderLeft: "1px solid #E2E8F0" }}>
+                      <div className="text-[22px] font-bold leading-none mb-1" style={{ color: "#F59E0B" }}>
+                        {d.general_rating ? `${d.general_rating}` : "—"}
+                      </div>
+                      <div className="text-[10px] font-medium" style={{ color: "#94A3B8" }}>⭐ التقييم</div>
+                    </div>
+                    <div className="py-3.5 text-center">
+                      <div className="text-[22px] font-bold leading-none mb-1" style={{ color: "#059669" }}>
+                        {d.total_trips}
+                      </div>
+                      <div className="text-[10px] font-medium" style={{ color: "#94A3B8" }}>🚛 الرحلات</div>
+                    </div>
+                  </div>
+
+                  {/* ─── Documents ─── */}
+                  <div className="flex-1 pt-4 pb-3">
+                    <div className="text-[10px] font-bold mb-3 tracking-wider" style={{ color: "#94A3B8" }}>المستندات</div>
+                    <div className="space-y-2">
+                      <DocRow date={d.national_id_expiry} label="الهوية الوطنية" />
+                      <DocRow date={d.license_expiry} label="رخصة القيادة" />
+                      <DocRow date={d.aramco_card_expiry} label="بطاقة أرامكو" />
+                      <DocRow date={d.transport_card_expiry} label="بطاقة النقل" />
+                    </div>
+                  </div>
+
+                  {/* ─── Actions ─── */}
+                  <div className="flex gap-2.5 pt-3" style={{ borderTop: "1px solid #F1F5F9" }}>
+                    <button onClick={() => { setEditDriver(d); setShowForm(true); }}
+                      className="flex-1 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-200 flex items-center justify-center gap-1.5"
+                      style={{ background: "#1D4ED8", color: "#fff", boxShadow: "0 2px 8px rgba(29,78,216,0.25)" }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "#1E40AF"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "#1D4ED8"; e.currentTarget.style.transform = "translateY(0)"; }}>
+                      ✏️ تعديل
+                    </button>
+                    <button onClick={() => handleDelete(d.id, d.name)}
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-[14px] transition-all duration-200"
+                      style={{ background: "#FEF2F2", color: "#DC2626", border: "1px solid #FECACA" }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "#FEE2E2"; e.currentTarget.style.transform = "scale(1.08)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "#FEF2F2"; e.currentTarget.style.transform = "scale(1)"; }}>
+                      🗑️
+                    </button>
                   </div>
                 </div>
-
-                {/* Document Dots */}
-                <div className="mx-5 mt-3 p-3 rounded-lg grid grid-cols-2 gap-y-2" style={{ background: "var(--surface-low)", border: "1px solid var(--border-light)" }}>
-                  <DocDot date={d.national_id_expiry} label="الهوية" />
-                  <DocDot date={d.license_expiry} label="الرخصة" />
-                  <DocDot date={d.aramco_card_expiry} label="أرامكو" />
-                  <DocDot date={d.transport_card_expiry} label="النقل" />
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-2 p-5 pt-4">
-                  <button onClick={() => { setEditDriver(d); setShowForm(true); }}
-                    className="flex-1 py-2 rounded-md text-[12px] font-semibold transition-all duration-150 flex items-center justify-center gap-1.5"
-                    style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}
-                    onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--primary)"; (e.currentTarget).style.color = "#fff"; }}
-                    onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--primary-fixed)"; (e.currentTarget).style.color = "var(--primary)"; }}>
-                    ✏️ تعديل
-                  </button>
-                  <button onClick={() => handleDelete(d.id, d.name)}
-                    className="w-9 h-9 rounded-md flex items-center justify-center text-[13px] transition-all duration-150 shrink-0"
-                    style={{ background: "var(--surface-low)", color: "var(--text-muted)" }}
-                    onMouseEnter={(e) => { (e.currentTarget).style.background = "var(--danger-bg)"; (e.currentTarget).style.color = "var(--danger)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget).style.background = "var(--surface-low)"; (e.currentTarget).style.color = "var(--text-muted)"; }}>
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

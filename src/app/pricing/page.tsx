@@ -102,19 +102,20 @@ export default function PricingPage() {
 
       <div className="p-6">
         {/* Fuel Filter */}
-        <div className="flex gap-2 mb-4 ani-up">
+        <div className="flex gap-2 mb-5 flex-wrap ani-up">
           <button onClick={() => setFuelFilter("all")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${fuelFilter === "all" ? "text-white" : "hover:shadow-sm"}`}
-            style={fuelFilter === "all" ? { background: "linear-gradient(135deg, var(--primary), var(--primary-container))", boxShadow: "0 2px 8px rgba(0,88,190,0.2)" } : { background: "var(--surface-card)", color: "var(--text-secondary)", border: "1px solid rgba(194,198,214,0.15)" }}>
-            الكل ({prices.length})
+            className={`btn-filter ${fuelFilter === "all" ? "active" : ""}`}>
+            ⛽ الكل ({prices.length})
           </button>
-          {fuelTypes.map(f => (
-            <button key={f.id} onClick={() => setFuelFilter(f.id)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${fuelFilter === f.id ? "text-white" : "hover:shadow-sm"}`}
-              style={fuelFilter === f.id ? { background: "linear-gradient(135deg, var(--primary), var(--primary-container))", boxShadow: "0 2px 8px rgba(0,88,190,0.2)" } : { background: "var(--surface-card)", color: "var(--text-secondary)", border: "1px solid rgba(194,198,214,0.15)" }}>
-              {f.name}
-            </button>
-          ))}
+          {fuelTypes.map(f => {
+            const icon = f.category === "diesel" ? "🛢️" : f.category === "kerosene" ? "✈️" : "⛽";
+            return (
+              <button key={f.id} onClick={() => setFuelFilter(f.id)}
+                className={`btn-filter ${fuelFilter === f.id ? "active" : ""}`}>
+                {icon} {f.name}
+              </button>
+            );
+          })}
         </div>
 
         {/* Add/Edit Form (inline) */}

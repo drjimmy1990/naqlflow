@@ -169,7 +169,11 @@ body {
   border-color: var(--primary-dim);
 }
 
-/* ═══ Buttons — Clean, Solid ═══ */
+/* ═══ Buttons — Interactive & Dynamic ═══ */
+button, [role="button"] {
+  cursor: pointer;
+}
+
 .btn-primary {
   background: var(--primary);
   color: var(--on-primary);
@@ -179,14 +183,19 @@ body {
   font-size: 13px;
   padding: 9px 20px;
   cursor: pointer;
-  transition: all 150ms ease;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
   font-family: var(--font-body);
+  position: relative;
 }
 .btn-primary:hover {
   background: #1E40AF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35);
 }
 .btn-primary:active {
   background: #1E3A8A;
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .btn-ghost {
@@ -198,12 +207,50 @@ body {
   font-size: 13px;
   padding: 9px 20px;
   cursor: pointer;
-  transition: all 150ms ease;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
   font-family: var(--font-body);
 }
 .btn-ghost:hover {
   background: var(--surface);
   border-color: var(--surface-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.btn-ghost:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Filter chip buttons */
+.btn-filter {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #E2E8F0;
+  background: #F1F5F9;
+  color: #475569;
+}
+.btn-filter:hover {
+  background: #E2E8F0;
+  border-color: #CBD5E1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.btn-filter:active {
+  transform: translateY(0);
+}
+.btn-filter.active {
+  background: #1D4ED8;
+  color: #fff;
+  border-color: #1D4ED8;
+}
+.btn-filter.active:hover {
+  background: #1E40AF;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
 }
 
 .btn-icon {
@@ -216,7 +263,10 @@ body {
   font-size: 12px;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 150ms ease;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-icon:hover {
+  transform: scale(1.1);
 }
 
 /* ═══ Status Chips — Pill Design ═══ */

@@ -1,19 +1,20 @@
 "use client";
 
 import { supabase } from "@/lib/supabase";
-import type { Order, Client, ClientSite, Driver, Vehicle, FuelType, OrderStatus } from "@/lib/types";
+import type { Order, Client, ClientSite, Driver, Vehicle, FuelType, OrderStatus, PriceList } from "@/lib/types";
 import { STATUS_CONFIG, STATUS_FLOW, FUEL_LABELS } from "@/lib/types";
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/PageHeader";
 import StatusBadge from "@/components/StatusBadge";
 
 // ── Order Form Modal ──
-function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCancel }: {
+function OrderForm({ order, clients, drivers, vehicles, fuelTypes, priceLists, onSave, onCancel }: {
   order: Partial<Order> | null;
   clients: Client[];
   drivers: Driver[];
   vehicles: Vehicle[];
   fuelTypes: FuelType[];
+  priceLists: PriceList[];
   onSave: () => void;
   onCancel: () => void;
 }) {
@@ -30,9 +31,23 @@ function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCan
     payment_method: order?.payment_method || "bank_transfer",
     notes: order?.financial_status_notes || "",
   });
+  const [matchedPrice, setMatchedPrice] = useState<PriceList | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
+
+  // Auto-match pricing rule
+  useEffect(() => {
+    if (!form.client_id || !form.fuel_type_id || !form.vehicle_id) { setMatchedPrice(null); return; }
+    const vehicle = vehicles.find(v => v.id === form.vehicle_id);
+    if (!vehicle) { setMatchedPrice(null); return; }
+    const match = priceLists.find(p =>
+      p.client_id === form.client_id &&
+      p.fuel_type_id === form.fuel_type_id &&
+      p.capacity_liters === vehicle.tank_capacity_liters
+    );
+    setMatchedPrice(match || null);
+  }, [form.client_id, form.fuel_type_id, form.vehicle_id, priceLists, vehicles]);
 
   useEffect(() => {
     if (!form.client_id) { setSites([]); return; }
@@ -56,6 +71,9 @@ function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCan
       quantity_liters: form.quantity_liters ? parseInt(form.quantity_liters) : null,
       payment_method: form.payment_method,
       financial_status_notes: form.notes || null,
+      price_list_id: matchedPrice?.id || null,
+      total_price: matchedPrice?.total_price || null,
+      unit_price: matchedPrice?.liter_increase || null,
     };
     const { error: err } = isEdit
       ? await supabase.from("orders").update(payload).eq("id", order!.id)
@@ -160,6 +178,34 @@ function OrderForm({ order, clients, drivers, vehicles, fuelTypes, onSave, onCan
           </div>
         </div>
 
+        {/* Matched Price */}
+        {matchedPrice && (
+          <div className="form-section" style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}>
+            <div className="form-section-title" style={{ color: "#1D4ED8" }}>💰 السعر المطابق</div>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <div className="text-[11px] font-medium" style={{ color: "#6B7280" }}>السعر الإجمالي</div>
+                <div className="text-[16px] font-bold mt-1" style={{ color: "#1D4ED8" }}>{matchedPrice.total_price.toLocaleString()} ر.س</div>
+              </div>
+              {matchedPrice.liter_increase && (
+                <div>
+                  <div className="text-[11px] font-medium" style={{ color: "#6B7280" }}>زيادة اللتر</div>
+                  <div className="text-[14px] font-bold mt-1" style={{ color: "#059669" }}>+{matchedPrice.liter_increase}</div>
+                </div>
+              )}
+              <div>
+                <div className="text-[11px] font-medium" style={{ color: "#6B7280" }}>السعة</div>
+                <div className="text-[14px] font-bold mt-1">{(matchedPrice.capacity_liters / 1000).toFixed(0)}K لتر</div>
+              </div>
+            </div>
+          </div>
+        )}
+        {!matchedPrice && form.client_id && form.fuel_type_id && form.vehicle_id && (
+          <div className="p-3 rounded-md text-[12px] font-semibold" style={{ background: "#FEF3C7", color: "#92400E" }}>
+            ⚠️ لا يوجد سعر مطابق — تأكد من إضافة السعر في قوائم الأسعار
+          </div>
+        )}
+
         <div className="form-group">
           <label className="form-label">ملاحظات</label>
           <textarea className="input-field" rows={2} value={form.notes} onChange={e => set("notes", e.target.value)} />
@@ -185,6 +231,7 @@ export default function OrdersPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [fuelTypes, setFuelTypes] = useState<FuelType[]>([]);
+  const [priceLists, setPriceLists] = useState<PriceList[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editOrder, setEditOrder] = useState<Order | null>(null);
@@ -192,13 +239,14 @@ export default function OrdersPage() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ordersRes, clientsRes, driversRes, vehiclesRes, fuelsRes, sitesRes] = await Promise.all([
+    const [ordersRes, clientsRes, driversRes, vehiclesRes, fuelsRes, sitesRes, pricesRes] = await Promise.all([
       supabase.from("orders").select("*").order("created_at", { ascending: false }),
       supabase.from("clients").select("*").order("name"),
       supabase.from("drivers").select("*").eq("is_active", true).order("name"),
       supabase.from("vehicles").select("*").eq("is_active", true).order("tanker_number"),
       supabase.from("fuel_types").select("*").order("name"),
       supabase.from("client_sites").select("*"),
+      supabase.from("price_lists").select("*"),
     ]);
     const clientMap = Object.fromEntries(((clientsRes.data || []) as Client[]).map(c => [c.id, c.name]));
     const siteMap = Object.fromEntries(((sitesRes.data || []) as ClientSite[]).map(s => [s.id, s.site_name]));
@@ -216,6 +264,7 @@ export default function OrdersPage() {
     setDrivers((driversRes.data as Driver[]) || []);
     setVehicles((vehiclesRes.data as Vehicle[]) || []);
     setFuelTypes((fuelsRes.data as FuelType[]) || []);
+    setPriceLists((pricesRes.data as PriceList[]) || []);
     setLoading(false);
   };
 
@@ -253,11 +302,11 @@ export default function OrdersPage() {
         {/* Status Filter — Horizontal Scroll */}
         <div className="flex gap-2 mb-6 flex-wrap ani-up">
           <button onClick={() => setStatusFilter("all")}
-            className="px-3.5 py-1.5 rounded-md text-[12px] font-semibold transition-all duration-150"
+            className="px-3.5 py-2 rounded-md text-[12px] font-bold transition-all duration-200 hover:-translate-y-[1px] hover:shadow-md"
             style={{
-              background: statusFilter === "all" ? "var(--primary)" : "var(--surface-card)",
-              color: statusFilter === "all" ? "#fff" : "var(--text-secondary)",
-              border: statusFilter === "all" ? "1px solid var(--primary)" : "1px solid var(--border)",
+              background: statusFilter === "all" ? "#1D4ED8" : "#F1F5F9",
+              color: statusFilter === "all" ? "#fff" : "#475569",
+              border: statusFilter === "all" ? "1px solid #1D4ED8" : "1px solid #E2E8F0",
             }}>
             الكل ({orders.length})
           </button>
@@ -267,11 +316,11 @@ export default function OrdersPage() {
             const isActive = statusFilter === s;
             return (
               <button key={s} onClick={() => setStatusFilter(s)}
-                className="px-3.5 py-1.5 rounded-md text-[12px] font-semibold transition-all duration-150 flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-md text-[12px] font-bold transition-all duration-200 flex items-center gap-1.5 hover:-translate-y-[1px] hover:shadow-md active:translate-y-0"
                 style={{
-                  background: isActive ? cfg.color : "var(--surface-card)",
+                  background: isActive ? cfg.color : "#F1F5F9",
                   color: isActive ? "#fff" : cfg.color,
-                  border: isActive ? `1px solid ${cfg.color}` : "1px solid var(--border)",
+                  border: isActive ? `1px solid ${cfg.color}` : "1px solid #E2E8F0",
                 }}>
                 <span className="text-[13px]">{cfg.icon}</span>
                 {cfg.label}
@@ -305,7 +354,7 @@ export default function OrdersPage() {
             <table className="table-premium">
               <thead>
                 <tr>
-                  {["رقم الطلب", "العميل", "الموقع", "السائق", "الوقود", "الكمية", "الحالة", "الإجراءات"].map(h => (
+                  {["رقم الطلب", "العميل", "الموقع", "السائق", "الوقود", "الكمية", "السعر", "الحالة", "الإجراءات"].map(h => (
                     <th key={h}>{h}</th>
                   ))}
                 </tr>
@@ -331,6 +380,15 @@ export default function OrdersPage() {
                         <span className="data-number text-[13px] font-bold">
                           {o.quantity_liters ? `${(o.quantity_liters / 1000).toFixed(0)}K L` : "—"}
                         </span>
+                      </td>
+                      <td>
+                        {o.total_price ? (
+                          <span className="data-number text-[13px] font-bold" style={{ color: "#059669" }}>
+                            {o.total_price.toLocaleString()} <span className="text-[10px] font-normal" style={{ color: "var(--text-muted)" }}>ر.س</span>
+                          </span>
+                        ) : (
+                          <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>—</span>
+                        )}
                       </td>
                       <td><StatusBadge status={o.status} size="sm" /></td>
                       <td>
@@ -372,7 +430,7 @@ export default function OrdersPage() {
       </div>
 
       {showForm && (
-        <OrderForm order={editOrder} clients={clients} drivers={drivers} vehicles={vehicles} fuelTypes={fuelTypes}
+        <OrderForm order={editOrder} clients={clients} drivers={drivers} vehicles={vehicles} fuelTypes={fuelTypes} priceLists={priceLists}
           onCancel={() => setShowForm(false)} onSave={() => { setShowForm(false); fetchAll(); }} />
       )}
     </div>
