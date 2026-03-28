@@ -2,6 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import StatusBadge from "@/components/StatusBadge";
 import type { Order, Client, Driver, OrderStatus } from "@/lib/types";
@@ -98,9 +99,9 @@ export default function DashboardPage() {
           <div className="card p-0 ani-up overflow-hidden">
             <div className="flex justify-between items-center px-6 py-4">
               <h3 className="text-[15px] font-bold m-0" style={{ fontFamily: "var(--font-display)" }}>آخر الطلبات</h3>
-              <a href="/orders" className="btn-ghost text-[12px] px-4 py-2 rounded-md no-underline">
+              <Link href="/orders" className="btn-ghost text-[12px] px-4 py-2 rounded-md no-underline">
                 عرض الكل ←
-              </a>
+              </Link>
             </div>
 
             {loading ? (
@@ -192,15 +193,15 @@ export default function DashboardPage() {
                   { href: "/vehicles", icon: "🚛", label: "الصهاريج" },
                   { href: "/clients", icon: "🏢", label: "العملاء" },
                 ].map(l => (
-                  <a key={l.href} href={l.href}
+                  <Link key={l.href} href={l.href}
                     className="flex items-center gap-2 p-3 rounded-md text-[12px] font-medium no-underline transition-all duration-150"
                     style={{ background: "var(--surface-low)", color: "var(--text-secondary)" }}
-                    onMouseEnter={(e) => { (e.target as HTMLElement).style.background = "var(--primary-fixed)"; (e.target as HTMLElement).style.color = "var(--primary)"; }}
-                    onMouseLeave={(e) => { (e.target as HTMLElement).style.background = "var(--surface-low)"; (e.target as HTMLElement).style.color = "var(--text-secondary)"; }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--primary-fixed)"; (e.currentTarget as HTMLElement).style.color = "var(--primary)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--surface-low)"; (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)"; }}
                   >
                     <span className="text-base">{l.icon}</span>
                     {l.label}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
