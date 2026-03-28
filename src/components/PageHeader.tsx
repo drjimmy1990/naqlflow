@@ -25,6 +25,15 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
   const [showNotif, setShowNotif] = useState(false);
   const [alerts, setAlerts] = useState<ExpiringDoc[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const loadAlerts = async () => {
     if (loaded) return;
@@ -83,33 +92,26 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
   }, [showNotif]);
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: `
-        @media (max-width: 1023px) {
-          .nf-header { padding-right: 64px !important; }
-          .nf-header h1 { font-size: 18px !important; }
-        }
-        @media (max-width: 639px) {
-          .nf-header { padding: 12px 14px !important; padding-right: 64px !important; flex-wrap: wrap; gap: 8px; }
-          .nf-header h1 { font-size: 16px !important; }
-        }
-      `}} />
-      <div className="nf-header" style={{
-        padding: "16px 28px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        position: "sticky",
-        top: 0,
-        zIndex: 10,
-        background: "var(--surface-card)",
-        borderBottom: "1px solid var(--border)",
-      }}>
+    <div style={{
+      padding: isMobile ? "14px 16px" : "16px 28px",
+      paddingRight: isMobile ? 64 : 28,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      position: "sticky",
+      top: 0,
+      zIndex: 10,
+      background: "var(--surface-card)",
+      borderBottom: "1px solid var(--border)",
+      flexWrap: isMobile ? "wrap" : "nowrap",
+      gap: isMobile ? 8 : 0,
+    }}>
       <div>
-        <h1 className="m-0 text-[22px] font-bold tracking-tight" style={{
+        <h1 className="m-0 font-bold tracking-tight" style={{
           fontFamily: "var(--font-display)",
           color: "var(--text-primary)",
           letterSpacing: "-0.03em",
+          fontSize: isMobile ? 18 : 22,
         }}>
           {title}
         </h1>
@@ -150,12 +152,14 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
 
           {/* Dropdown */}
           {showNotif && (
-            <div className="absolute left-0 top-full mt-2 w-[360px] rounded-lg overflow-hidden ani-scale"
+            <div className="absolute left-0 top-full mt-2 rounded-lg overflow-hidden ani-scale"
               style={{
+                width: isMobile ? "calc(100vw - 32px)" : 360,
                 background: "var(--surface-card)",
                 boxShadow: "var(--shadow-2xl)",
                 border: "1px solid var(--border)",
                 zIndex: 100,
+                ...(isMobile ? { left: "auto", right: -40 } : {}),
               }}>
               <div className="px-4 py-3.5 flex items-center justify-between"
                 style={{ background: "var(--surface)", borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
@@ -222,6 +226,5 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
         </span>
       </div>
     </div>
-    </>
   );
 }
