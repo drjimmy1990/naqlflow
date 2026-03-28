@@ -83,7 +83,28 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
   }, [showNotif]);
 
   return (
-    <div className="page-header" style={{ paddingRight: "max(28px, env(safe-area-inset-right, 28px))" }}>
+    <>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 1023px) {
+          .nf-header { padding-right: 64px !important; }
+          .nf-header h1 { font-size: 18px !important; }
+        }
+        @media (max-width: 639px) {
+          .nf-header { padding: 12px 14px !important; padding-right: 64px !important; flex-wrap: wrap; gap: 8px; }
+          .nf-header h1 { font-size: 16px !important; }
+        }
+      `}} />
+      <div className="nf-header" style={{
+        padding: "16px 28px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+        background: "var(--surface-card)",
+        borderBottom: "1px solid var(--border)",
+      }}>
       <div>
         <h1 className="m-0 text-[22px] font-bold tracking-tight" style={{
           fontFamily: "var(--font-display)",
@@ -201,5 +222,6 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
         </span>
       </div>
     </div>
+    </>
   );
 }

@@ -12,14 +12,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ar" dir="rtl">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        {/* 
+          CRITICAL: Inline responsive styles for main layout.
+          This ensures mobile layout works on FIRST paint, 
+          before any external CSS loads.
+        */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .nf-main {
+            margin-right: 260px;
+            min-height: 100vh;
+          }
+          @media (max-width: 1023px) {
+            .nf-main {
+              margin-right: 0 !important;
+            }
+          }
+        `}} />
       </head>
       <body className="antialiased">
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <main className="flex-1 main-content">
-            {children}
-          </main>
-        </div>
+        <Sidebar />
+        <main className="nf-main">
+          {children}
+        </main>
       </body>
     </html>
   );
