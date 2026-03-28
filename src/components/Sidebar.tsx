@@ -72,7 +72,7 @@ export default function Sidebar() {
           </div>
           <div className="flex-1">
             <div className="font-bold text-[17px] text-white tracking-tight" style={{ fontFamily: "var(--font-display)" }}>NaqlFlow</div>
-            <div className="text-[10px] text-[#475569] tracking-wider font-medium" style={{ fontFamily: "var(--font-data)" }}>نقل فلو · v4.0</div>
+            <div className="text-[10px] text-[#475569] tracking-wider font-medium" style={{ fontFamily: "var(--font-data)" }}>نقل فلو · v4.1</div>
           </div>
           {/* Close button */}
           <button
