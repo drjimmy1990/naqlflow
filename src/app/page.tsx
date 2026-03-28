@@ -84,7 +84,7 @@ export default function DashboardPage() {
     <div className="ani-page">
       <PageHeader title="لوحة التحكم" subtitle="نظرة عامة على عمليات اليوم" />
 
-      <div className="p-8">
+      <div className="p-4 lg:p-8">
         {/* KPIs */}
         <div className="flex gap-4 flex-wrap mb-6">
           <KPICard label="إجمالي الطلبات" value={stats.total} icon="📋" gradient="gradient-blue" />

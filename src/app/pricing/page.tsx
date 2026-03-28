@@ -100,7 +100,7 @@ export default function PricingPage() {
         action={<button onClick={() => { resetForm(); setShowForm(true); }}
           className="btn-primary text-[12px]">+ إضافة سعر</button>} />
 
-      <div className="p-6">
+      <div className="p-4 lg:p-6">
         {/* Fuel Filter */}
         <div className="flex gap-2 mb-5 flex-wrap ani-up">
           <button onClick={() => setFuelFilter("all")}

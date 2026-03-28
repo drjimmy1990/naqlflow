@@ -83,7 +83,7 @@ export default function PageHeader({ title, subtitle, action }: PageHeaderProps)
   }, [showNotif]);
 
   return (
-    <div className="page-header">
+    <div className="page-header" style={{ paddingRight: "max(28px, env(safe-area-inset-right, 28px))" }}>
       <div>
         <h1 className="m-0 text-[22px] font-bold tracking-tight" style={{
           fontFamily: "var(--font-display)",

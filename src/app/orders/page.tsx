@@ -298,7 +298,7 @@ export default function OrdersPage() {
           </button>
         } />
 
-      <div className="p-8">
+      <div className="p-4 lg:p-8">
         {/* Status Filter — Horizontal Scroll */}
         <div className="flex gap-2 mb-6 flex-wrap ani-up">
           <button onClick={() => setStatusFilter("all")}

@@ -198,7 +198,7 @@ export default function VehiclesPage() {
           </button>
         } />
 
-      <div style={{ padding: "24px 32px" }}>
+      <div className="page-content" style={{ padding: "24px clamp(14px, 3vw, 32px)" }}>
         {loading ? (
           <div className="text-center py-20" style={{ color: "var(--text-faint)" }}>
             <div className="text-3xl mb-2 animate-pulse">🚛</div>جاري التحميل...
