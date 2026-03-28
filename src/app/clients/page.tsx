@@ -339,7 +339,8 @@ export default function ClientsPage() {
           </div>
         ) : (
           <div className="card overflow-hidden ani-up">
-            <table className="table-premium">
+            <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <table className="table-premium" style={{ minWidth: 800 }}>
               <thead>
                 <tr>
                   <th>العميل</th>
@@ -396,6 +397,7 @@ export default function ClientsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         )}
       </div>

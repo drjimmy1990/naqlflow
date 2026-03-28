@@ -113,7 +113,8 @@ export default function DashboardPage() {
                 <p className="text-xs mt-1" style={{ color: "var(--text-faint)" }}>نفّذ seed.sql لإضافة بيانات تجريبية</p>
               </div>
             ) : (
-              <table className="table-premium">
+              <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+              <table className="table-premium" style={{ minWidth: 500 }}>
                 <thead>
                   <tr>
                     {["رقم الطلب", "العميل", "الحالة", "المبلغ"].map(h => (
@@ -141,6 +142,7 @@ export default function DashboardPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
 

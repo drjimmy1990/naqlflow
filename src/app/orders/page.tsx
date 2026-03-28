@@ -351,7 +351,8 @@ export default function OrdersPage() {
               <p className="text-[12px] mt-1" style={{ color: "var(--text-faint)" }}>جرّب تغيير الفلتر أو أنشئ طلب جديد</p>
             </div>
           ) : (
-            <table className="table-premium">
+            <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <table className="table-premium" style={{ minWidth: 900 }}>
               <thead>
                 <tr>
                   {["رقم الطلب", "العميل", "الموقع", "السائق", "الوقود", "الكمية", "السعر", "الحالة", "الإجراءات"].map(h => (
@@ -425,6 +426,7 @@ export default function OrdersPage() {
                 })}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       </div>

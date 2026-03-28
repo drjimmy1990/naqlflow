@@ -176,7 +176,8 @@ export default function PricingPage() {
                   <span className="font-bold text-[14px]" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>🏢 {clientName}</span>
                   <span className="chip text-[10px]" style={{ background: "var(--primary-fixed)", color: "var(--primary)" }}>({items.length} تسعيرة)</span>
                 </div>
-                <table className="table-premium" style={{ tableLayout: "fixed" }}>
+                <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+                <table className="table-premium" style={{ tableLayout: "fixed", minWidth: 700 }}>
                   <colgroup>
                     <col style={{ width: "20%" }} />
                     <col style={{ width: "25%" }} />
@@ -228,6 +229,7 @@ export default function PricingPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             ))}
           </div>
