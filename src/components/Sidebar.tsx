@@ -21,73 +21,45 @@ const BOTTOM_ITEMS = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile
+  // Close sidebar on route change
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+    setOpen(false);
+  }, [pathname]);
 
-  // Close sidebar on route change (mobile)
+  // Prevent body scroll when sidebar is open
   useEffect(() => {
-    if (isMobile) setOpen(false);
-  }, [pathname, isMobile]);
-
-  // Prevent body scroll when sidebar is open on mobile
-  useEffect(() => {
-    if (isMobile && open) {
+    if (open) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
     return () => { document.body.style.overflow = ""; };
-  }, [open, isMobile]);
+  }, [open]);
 
   return (
     <>
-      {/* ═══ Mobile Hamburger Button ═══ */}
-      {isMobile && !open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed top-3 right-3 z-[60] w-11 h-11 rounded-xl flex items-center justify-center"
-          style={{
-            background: "linear-gradient(135deg, #0B1120, #1E293B)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
-            border: "1px solid rgba(255,255,255,0.1)",
-          }}
-          aria-label="فتح القائمة"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
-      )}
+      {/* ═══ Mobile Hamburger Button — CSS-controlled visibility ═══ */}
+      <button
+        onClick={() => setOpen(true)}
+        className="sidebar-hamburger"
+        aria-label="فتح القائمة"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
 
       {/* ═══ Mobile Backdrop ═══ */}
-      {isMobile && open && (
-        <div
-          className="fixed inset-0 z-[55]"
-          style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
-          onClick={() => setOpen(false)}
-        />
-      )}
+      <div
+        className={`sidebar-backdrop ${open ? "sidebar-backdrop-open" : ""}`}
+        onClick={() => setOpen(false)}
+      />
 
       {/* ═══ Sidebar ═══ */}
-      <aside
-        className="fixed top-0 right-0 h-screen flex flex-col z-[60]"
-        style={{
-          width: isMobile ? "280px" : "var(--sidebar-width)",
-          background: "var(--sidebar-bg)",
-          boxShadow: "-4px 0 20px rgba(0, 0, 0, 0.15)",
-          transform: isMobile ? (open ? "translateX(0)" : "translateX(100%)") : "translateX(0)",
-          transition: "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      >
+      <aside className={`sidebar-panel ${open ? "sidebar-panel-open" : ""}`}>
 
         {/* Logo + Close */}
         <div className="p-6 pb-5 flex items-center gap-3.5">
@@ -102,17 +74,14 @@ export default function Sidebar() {
             <div className="font-bold text-[17px] text-white tracking-tight" style={{ fontFamily: "var(--font-display)" }}>NaqlFlow</div>
             <div className="text-[10px] text-[#475569] tracking-wider font-medium" style={{ fontFamily: "var(--font-data)" }}>نقل فلو · v4.0</div>
           </div>
-          {/* Close button - visible on mobile */}
-          {isMobile && (
-            <button
-              onClick={() => setOpen(false)}
-              className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-              style={{ background: "rgba(255,255,255,0.06)", color: "#94A3B8" }}
-              aria-label="إغلاق القائمة"
-            >
-              ✕
-            </button>
-          )}
+          {/* Close button */}
+          <button
+            onClick={() => setOpen(false)}
+            className="sidebar-close-btn"
+            aria-label="إغلاق القائمة"
+          >
+            ✕
+          </button>
         </div>
 
         {/* Divider */}
