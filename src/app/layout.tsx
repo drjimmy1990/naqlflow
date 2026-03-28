@@ -3,6 +3,10 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import MainContent from "@/components/MainContent";
 
+// CRITICAL: Force ALL pages to render dynamically on every request.
+// This prevents Next.js from serving stale pre-rendered HTML from old builds.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "نقل فلو — NaqlFlow",
   description: "نظام إدارة وتتبع عمليات النقليات",
